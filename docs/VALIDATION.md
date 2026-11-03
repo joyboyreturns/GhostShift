@@ -257,3 +257,53 @@ persistence, expiry rejection and cleanup; its JSON is preserved in evidence/con
 A non-blocking annotation notes the pinned upload-artifact action’s Node 20 deprecation; the runner
 executed it under Node 24 and artifact upload succeeded. No Kiro session or public app deployment
 was performed. The follow-up commit contains only release documentation/evidence and hosting timing.
+
+## Whole-product polish — November 3, 2026
+
+Codex polished the existing two-fixture product locally. No AWS fixture or configuration,
+deployment, Kiro session, engine change, schema migration, or new dependency was introduced.
+
+The request boundary now explains network failures, unreadable responses and invalid response
+shapes without displaying raw payloads or automatically retrying writes. Route rendering and
+lazy-module failures have a reload/Home recovery screen. Path changes update the page title and
+focus the main heading; query-only interactions retain focus. The skip link targets a focusable main.
+
+Library search follows back/forward navigation, invalid offsets fall back to zero within the API's
+existing bounds, and empty/out-of-range pages offer clear recovery. Imports freeze submitted inputs
+while saving, retain failed text/file selections, explain oversized PDFs, and identify the saved
+source independently of subsequent edits. Saves, approvals, revisions, choices and branches refresh
+affected Library/run queries. Scenario-list, saved-run and comparison failures expose retry controls.
+
+Shared layout refinements cover wrapping actions, readable panels, narrow forms, touch targets,
+long identifiers, contained table scrolling and a corrected tablet header overflow. Print refinements
+retain authority/evidence text, use clearer borders, hide interactive-only comparison links and reduce
+splitting of metadata/rows. Existing reduced-motion and opt-in audio behavior is preserved.
+
+Final commands all passed:
+
+| Command | Result |
+| --- | --- |
+| `make lint` | Backend Ruff/format and frontend ESLint/Prettier passed. |
+| `make typecheck` | Mypy (35 application files) and TypeScript passed. |
+| `make test` | 154 backend tests and 23 frontend unit tests passed. |
+| `make e2e` | 26 browser tests passed, including seven new polish tests. |
+| `make e2e-public` | Production Vite build and local Caddy anonymous-workspace journey passed (one test). |
+
+The new regressions cover request recovery/cancellation and validation details; Library history,
+invalid offsets and empty-page recovery; failed/import-in-flight behavior and saved-source identity;
+oversized PDF guidance; failed lazy-module recovery; and ten existing routes at 360, 768 and 1440px
+with reduced motion, heading focus, skip-link keyboard access, overflow checks and screenshots.
+Existing tests continue to cover both demo outcomes, custom authoring, replay, forks, proposals,
+comparison exports, source provenance and public isolation.
+
+Visual review included phone/tablet/desktop captures of the command room and authoring screens,
+plus session/comparison print-media captures. Generated images are local Playwright artifacts under
+`apps/web/test-results/polish-existing-journeys-*`. Print-media inspection is not certification of
+physical printer pagination. The final production test used disposable fixture-only workspaces and
+loopback HTTP; it does not establish public-host/TLS readiness.
+
+The existing Starlette/httpx test-client deprecation remains. Browser runs can emit transient
+React Flow container-size warnings during route/media transitions; graph display and interaction
+checks passed. The lazy-module failure regression intentionally produces React's caught-error log.
+The first lint/type/test attempts could not access the existing uv cache within the filesystem
+sandbox; approved reruns completed all checks. These polish changes remain local and uncommitted.

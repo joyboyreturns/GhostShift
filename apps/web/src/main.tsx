@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { api } from "./lib/api";
 import { Button } from "./components/ui/button";
+import { RouteRecovery } from "./components/RouteRecovery";
 import { Home } from "./routes/Home";
 import {
   Bat,
@@ -149,7 +150,7 @@ export function App() {
           Getting started
         </Link>
       </header>
-      <main id="main">
+      <main id="main" tabIndex={-1}>
         {catalog.data?.workspace && (
           <aside className="demo-notice" aria-label="Temporary demo workspace">
             <span className="badge amber">Temporary demo</span>
@@ -186,55 +187,63 @@ export function App() {
             <Button onClick={() => void catalog.refetch()}>Retry</Button>
           </section>
         ) : (
-          <React.Suspense
-            fallback={<SpiritLoader label="Summoning workspace…" />}
-          >
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/studio" element={<Studio />} />
-              <Route path="/library" element={<Library />} />
-              <Route path="/sources/:documentId" element={<SourceDocument />} />
-              <Route path="/guide" element={<Guide />} />
-              <Route path="/history/:playbookId" element={<VersionHistory />} />
-              <Route path="/scenarios/new" element={<ScenarioCreate />} />
-              <Route path="/replay/:sessionId" element={<ReplayLab />} />
-              <Route path="/reports/compare" element={<ComparisonReport />} />
-              <Route path="/import" element={<Import />} />
-              <Route path="/review/:playbookId" element={<PolicyReview />} />
-              <Route
-                path="/proposals/:proposalId"
-                element={<ProposalDetail />}
-              />
-              <Route path="/simulation" element={<SimulationStart />} />
-              <Route
-                path="/simulation/:sessionId"
-                element={<SimulationRoom />}
-              />
-              <Route
-                path="/simulation/:sessionId/report"
-                element={<SessionReport />}
-              />
-              <Route
-                path="*"
-                element={
-                  <section className="message lost-ghost">
-                    <div className="lost-scene">
-                      <Tombstone lines={["THIS PAGE", "404"]} />
-                      <Ghost aria-hidden="true" className="lost-ghost-icon" />
-                    </div>
-                    <span className="eyebrow">404 / Nothing haunts here</span>
-                    <h1>This page gave up the ghost.</h1>
-                    <p>
-                      The address does not match any page in this workspace.
-                    </p>
-                    <Button asChild>
-                      <Link to="/">Return home</Link>
-                    </Button>
-                  </section>
-                }
-              />
-            </Routes>
-          </React.Suspense>
+          <RouteRecovery>
+            <React.Suspense
+              fallback={<SpiritLoader label="Summoning workspace…" />}
+            >
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/studio" element={<Studio />} />
+                <Route path="/library" element={<Library />} />
+                <Route
+                  path="/sources/:documentId"
+                  element={<SourceDocument />}
+                />
+                <Route path="/guide" element={<Guide />} />
+                <Route
+                  path="/history/:playbookId"
+                  element={<VersionHistory />}
+                />
+                <Route path="/scenarios/new" element={<ScenarioCreate />} />
+                <Route path="/replay/:sessionId" element={<ReplayLab />} />
+                <Route path="/reports/compare" element={<ComparisonReport />} />
+                <Route path="/import" element={<Import />} />
+                <Route path="/review/:playbookId" element={<PolicyReview />} />
+                <Route
+                  path="/proposals/:proposalId"
+                  element={<ProposalDetail />}
+                />
+                <Route path="/simulation" element={<SimulationStart />} />
+                <Route
+                  path="/simulation/:sessionId"
+                  element={<SimulationRoom />}
+                />
+                <Route
+                  path="/simulation/:sessionId/report"
+                  element={<SessionReport />}
+                />
+                <Route
+                  path="*"
+                  element={
+                    <section className="message lost-ghost">
+                      <div className="lost-scene">
+                        <Tombstone lines={["THIS PAGE", "404"]} />
+                        <Ghost aria-hidden="true" className="lost-ghost-icon" />
+                      </div>
+                      <span className="eyebrow">404 / Nothing haunts here</span>
+                      <h1>This page gave up the ghost.</h1>
+                      <p>
+                        The address does not match any page in this workspace.
+                      </p>
+                      <Button asChild>
+                        <Link to="/">Return home</Link>
+                      </Button>
+                    </section>
+                  }
+                />
+              </Routes>
+            </React.Suspense>
+          </RouteRecovery>
         )}
       </main>
       <Graveyard className="footer-graveyard" />

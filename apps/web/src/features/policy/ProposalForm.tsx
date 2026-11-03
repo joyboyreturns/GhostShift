@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { policyApi, type SimulationSession } from "../../lib/api";
 import { Button } from "../../components/ui/button";
@@ -7,6 +7,7 @@ import { ChoiceEditor } from "./ChoiceEditor";
 
 export function ProposalForm({ session }: { session: SimulationSession }) {
   const navigate = useNavigate();
+  const cache = useQueryClient();
   const nodes = session.result.input_snapshot.graph.nodes;
   const node = nodes.find((node) => node.id === session.current_node_id)!;
   const [choices, setChoices] = useState(node.choices);
@@ -15,10 +16,19 @@ export function ProposalForm({ session }: { session: SimulationSession }) {
   const save = useMutation({
     mutationFn: () =>
       policyApi.propose(session.id, session.revision, rationale, choices),
+    onSuccess: () => {
+      void cache.invalidateQueries({ queryKey: ["library"] });
+    },
   });
   const rehearse = useMutation({
     mutationFn: () => policyApi.rehearse(save.data!.id),
-    onSuccess: (result) => navigate(`/simulation/${result.id}`),
+    onSuccess: (result) => {
+      cache.setQueryData(["session", result.id], result);
+      void cache.invalidateQueries({ queryKey: ["library"] });
+      void cache.invalidateQueries({ queryKey: ["replay-runs"] });
+      void cache.invalidateQueries({ queryKey: ["incident-branches"] });
+      navigate(`/simulation/${result.id}`);
+    },
   });
   return (
     <section className="panel report-section proposal-section">

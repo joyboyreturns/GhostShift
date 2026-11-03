@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { BookOpen, FileText, GitBranch, Plus, Play } from "lucide-react";
 import { policyApi, workspaceApi } from "../lib/api";
@@ -10,10 +9,16 @@ const tabs = ["documents", "playbooks", "scenarios", "sessions"] as const;
 type Tab = (typeof tabs)[number];
 export function Library() {
   const navigate = useNavigate();
+  const cache = useQueryClient();
   const [params, setParams] = useSearchParams();
   const tab: Tab = tabs.find((tab) => tab === params.get("tab")) ?? "documents";
-  const offset = Math.max(0, Number(params.get("offset")) || 0);
-  const [search, setSearch] = useState(params.get("q") ?? "");
+  const requestedOffset = Number(params.get("offset"));
+  const offset =
+    Number.isSafeInteger(requestedOffset) &&
+    requestedOffset >= 0 &&
+    requestedOffset <= 100000
+      ? requestedOffset
+      : 0;
   const query = useQuery({
     queryKey: ["library", params.get("q") ?? "", offset],
     queryFn: () => workspaceApi.library(params.get("q") ?? "", offset),
@@ -22,10 +27,14 @@ export function Library() {
   const draft = useMutation({
     mutationFn: ({ id, title }: { id: string; title: string }) =>
       policyApi.draft(id, title),
-    onSuccess: (result) => navigate(`/review/${result.id}?edit=1`),
+    onSuccess: (result) => {
+      void cache.invalidateQueries({ queryKey: ["library"] });
+      navigate(`/review/${result.id}?edit=1`);
+    },
   });
   const data = query.data;
   const empty = data && data[tab].length === 0;
+  const beyondPage = empty && data.totals[tab] > 0 && offset > 0;
   return (
     <section className="library-page">
       <header className="library-heading">
@@ -51,16 +60,18 @@ export function Library() {
         className="library-search"
         onSubmit={(event) => {
           event.preventDefault();
-          setParams({ tab, q: search });
+          const form = new FormData(event.currentTarget);
+          setParams({ tab, q: String(form.get("search") ?? "").trim() });
         }}
       >
         <label htmlFor="library-search">Search by title or run ID</label>
         <div>
           <input
             id="library-search"
+            name="search"
+            key={params.get("q") ?? ""}
             maxLength={200}
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            defaultValue={params.get("q") ?? ""}
           />
           <Button variant="outline">Search</Button>
         </div>
@@ -89,17 +100,34 @@ export function Library() {
       {draft.error && <p role="alert">{draft.error.message}</p>}
       {empty && (
         <div className="panel library-empty">
-          <h2>No {tab} found</h2>
+          <h2>{beyondPage ? "No results on this page" : `No ${tab} found`}</h2>
           <p>
-            {params.get("q")
-              ? "Try another search."
-              : tab === "sessions"
-                ? "Start a scenario to record your first rehearsal."
-                : "Import a procedure, model its rules, then create a scenario."}
+            {beyondPage
+              ? "Your saved items are on earlier pages. Return to the first page to see them."
+              : params.get("q")
+                ? "Try another search."
+                : tab === "sessions"
+                  ? "Start a scenario to record your first rehearsal."
+                  : "Import a procedure, model its rules, then create a scenario."}
           </p>
-          <Link to={tab === "sessions" ? "/simulation" : "/import"}>
-            {tab === "sessions" ? "Choose a scenario" : "Import a procedure"} ↗
-          </Link>
+          {beyondPage || params.get("q") ? (
+            <Button
+              variant="outline"
+              onClick={() =>
+                setParams({
+                  tab,
+                  ...(beyondPage ? { q: params.get("q") ?? "" } : {}),
+                })
+              }
+            >
+              {beyondPage ? "Return to first page" : "Clear search"}
+            </Button>
+          ) : (
+            <Link to={tab === "sessions" ? "/simulation" : "/import"}>
+              {tab === "sessions" ? "Choose a scenario" : "Import a procedure"}{" "}
+              ↗
+            </Link>
+          )}
         </div>
       )}
       <div className="library-grid">
@@ -201,7 +229,7 @@ export function Library() {
           ))}
       </div>
       {data && (
-        <div className="pagination">
+        <div className="pagination" aria-label="Library pagination">
           <Button
             variant="outline"
             disabled={offset === 0}
@@ -215,10 +243,12 @@ export function Library() {
           >
             Previous
           </Button>
-          <span>
-            {data.totals[tab]
-              ? `${offset + 1}–${Math.min(offset + data.limit, data.totals[tab])} of ${data.totals[tab]}`
-              : "0 results"}
+          <span role="status">
+            {beyondPage
+              ? `0 on this page · ${data.totals[tab]} total`
+              : data.totals[tab]
+                ? `${offset + 1}–${Math.min(offset + data.limit, data.totals[tab])} of ${data.totals[tab]}`
+                : "0 results"}
           </span>
           <Button
             variant="outline"

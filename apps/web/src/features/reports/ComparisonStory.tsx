@@ -58,7 +58,10 @@ export function ComparisonStory({
                 {report.deviation_count} deviations ·{" "}
                 {report.reviewed_supported_count} reviewed, supported decisions
               </p>
-              <Link to={`/simulation/${report.session_id}`}>
+              <Link
+                className="no-print"
+                to={`/simulation/${report.session_id}`}
+              >
                 Inspect run {index === 0 ? "A" : "B"} ↗
               </Link>
             </article>

@@ -1,0 +1,166 @@
+/* Shared finishing touches for authoring, rehearsal and portable evidence. */
+.import-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+}
+.import-fields label {
+  margin-top: 8px;
+}
+.import-fields:disabled {
+  opacity: 0.75;
+}
+.import-fields [aria-invalid="true"] {
+  border-color: var(--coral);
+}
+.message p {
+  max-width: 65ch;
+  margin-inline: auto;
+  line-height: 1.7;
+}
+.library-heading > *,
+.simulation-heading > *,
+.report-navigation > *,
+.session-actions > * {
+  min-width: 0;
+}
+.session-actions,
+.hero-actions,
+.form-footer,
+.pagination {
+  flex-wrap: wrap;
+}
+.button,
+.text-action {
+  white-space: normal;
+  text-align: center;
+}
+.button:disabled,
+button:disabled {
+  cursor: not-allowed;
+}
+.report-metadata dd,
+.library-card h2,
+.scenario-card dd,
+.rule-inspector,
+.evidence-panel,
+.hash-value {
+  overflow-wrap: anywhere;
+}
+.report-section,
+.comparison-panel,
+.scenario-card {
+  min-width: 0;
+}
+.report-section p,
+.incident-debrief p,
+.scenario-card > p {
+  line-height: 1.7;
+}
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+main h1,
+[id="active-decision"] {
+  scroll-margin-top: 110px;
+}
+main h1:focus-visible {
+  outline: 2px solid var(--violet-soft);
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+@media (min-width: 701px) and (max-width: 960px) {
+  .app-header {
+    gap: 20px;
+    padding-inline: 24px;
+  }
+  .app-header .preview-label {
+    display: none;
+  }
+  .app-header nav {
+    gap: 4px;
+  }
+  .app-header nav a {
+    padding-inline: 10px;
+  }
+}
+@media (max-width: 768px) {
+  .app-header nav a,
+  .button,
+  .library-tabs button,
+  .text-action,
+  summary {
+    min-height: 44px;
+  }
+  .app-header nav a {
+    display: inline-flex;
+    align-items: center;
+  }
+  .library-heading,
+  .simulation-heading,
+  .report-navigation {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .comparison-panel th,
+  .comparison-panel td {
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 400px) {
+  .library-search > div {
+    flex-wrap: wrap;
+  }
+  .library-search input {
+    flex-basis: 100%;
+  }
+  .session-actions .button,
+  .form-footer .button {
+    width: 100%;
+  }
+  .pagination {
+    justify-content: center;
+  }
+}
+@media print {
+  :root {
+    --line: #ddd;
+    --line-strong: #ccc;
+    --line-bright: #aaa;
+  }
+  #main:focus {
+    outline: none;
+  }
+  .report-page .outcome-pair > article,
+  .report-page .badge,
+  .report-page [data-highlighted="true"] {
+    border-color: #aaa;
+  }
+  main h1:focus-visible {
+    outline: none;
+  }
+  .report-page .table-scroll,
+  .comparison-panel .table-scroll {
+    overflow: visible;
+  }
+  .report-page table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  .report-page th,
+  .report-page td {
+    overflow-wrap: anywhere;
+  }
+  .report-page h2,
+  .report-page h3 {
+    break-after: avoid;
+  }
+  .report-page tr,
+  .report-metadata > div {
+    break-inside: avoid;
+  }
+}

@@ -88,8 +88,28 @@ export async function request<T>(
   schema: z.ZodType<T>,
   init?: RequestInit,
 ): Promise<T> {
-  const response = await fetch(`/api${path}`, init);
-  const body: unknown = await response.json();
+  let response: Response;
+  try {
+    response = await fetch(`/api${path}`, init);
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError")
+      throw error;
+    throw new Error(
+      "Could not reach your workspace. Check your connection. If you were saving, check the Library before trying again.",
+    );
+  }
+  let body: unknown;
+  try {
+    body = await response.json();
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError")
+      throw error;
+    throw new Error(
+      response.ok
+        ? "The workspace returned an unreadable response. If you were saving, check the Library before trying again."
+        : `The workspace could not complete this request (${response.status}). Please try again shortly.`,
+    );
+  }
   if (!response.ok) {
     const error = z
       .object({
@@ -120,7 +140,12 @@ export async function request<T>(
         : `Request failed (${response.status})`,
     );
   }
-  return schema.parse(body);
+  const result = schema.safeParse(body);
+  if (!result.success)
+    throw new Error(
+      "The workspace returned unexpected data. Reload this page. If you were saving, check the Library before trying again.",
+    );
+  return result.data;
 }
 export const api = {
   importPdf: async (title: string, file: File) => {

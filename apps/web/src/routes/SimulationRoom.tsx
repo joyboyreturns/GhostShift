@@ -47,6 +47,8 @@ export function SimulationRoom() {
       cache.setQueryData(["session", sessionId], session);
       void cache.invalidateQueries({ queryKey: ["report", sessionId] });
       void cache.invalidateQueries({ queryKey: ["compare"] });
+      void cache.invalidateQueries({ queryKey: ["library"] });
+      void cache.invalidateQueries({ queryKey: ["replay-runs"] });
     },
     onError: () => {
       void query.refetch();
@@ -57,6 +59,8 @@ export function SimulationRoom() {
     onSuccess: (session) => {
       cache.setQueryData(["session", session.id], session);
       void cache.invalidateQueries({ queryKey: ["incident-branches"] });
+      void cache.invalidateQueries({ queryKey: ["library"] });
+      void cache.invalidateQueries({ queryKey: ["replay-runs"] });
       choose.reset();
       replay.reset();
       navigate(`/simulation/${session.id}`);

@@ -21,7 +21,14 @@ export function Comparison({
   });
   if (query.isPending) return <p role="status">Comparing actual runs…</p>;
   if (query.error)
-    return <p role="alert">Comparison unavailable: {query.error.message}</p>;
+    return (
+      <p role="alert">
+        Comparison unavailable: {query.error.message}{" "}
+        <button className="text-action" onClick={() => void query.refetch()}>
+          Retry comparison
+        </button>
+      </p>
+    );
   const { left, right, shared_event_prefix, scope } = query.data;
   const rows = [
     ["Outcome", statusLabels[left.status], statusLabels[right.status]],

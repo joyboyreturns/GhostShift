@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowRight, GitBranch } from "lucide-react";
 import { api, simulationApi, workspaceApi } from "../lib/api";
@@ -10,6 +10,7 @@ import { factLabel } from "../features/simulation/presentation";
 export function SimulationStart() {
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
+  const cache = useQueryClient();
   const [consent, setConsent] = useState(false);
   const catalog = useQuery({ queryKey: ["catalog"], queryFn: api.catalog });
   const options = useQuery({
@@ -38,7 +39,12 @@ export function SimulationStart() {
         consent,
         params.get("playbook") ?? undefined,
       ),
-    onSuccess: (session) => navigate(`/simulation/${session.id}`),
+    onSuccess: (session) => {
+      cache.setQueryData(["session", session.id], session);
+      void cache.invalidateQueries({ queryKey: ["library"] });
+      void cache.invalidateQueries({ queryKey: ["replay-runs"] });
+      navigate(`/simulation/${session.id}`);
+    },
   });
   const error = catalog.error ?? scenario.error ?? playbook.error;
   if (error)
@@ -103,6 +109,7 @@ export function SimulationStart() {
       <label htmlFor="scenario-select">Choose a fictional scenario</label>
       <select
         id="scenario-select"
+        disabled={start.isPending}
         value={data.id}
         onChange={(event) => {
           setParams({ scenario: event.target.value });
@@ -118,6 +125,17 @@ export function SimulationStart() {
           (scenario) => scenario.id === data.id,
         ) && <option value={data.id}>{data.title}</option>}
       </select>
+      {options.error && (
+        <p role="alert">
+          Other scenarios could not load: {options.error.message}{" "}
+          <button
+            className="text-action"
+            onClick={() => void options.refetch()}
+          >
+            Retry scenarios
+          </button>
+        </p>
+      )}
       <div className="scenario-card panel">
         <span className="badge amber">
           Fictional ·{" "}
@@ -145,6 +163,7 @@ export function SimulationStart() {
         <label className="consent">
           <input
             type="checkbox"
+            disabled={start.isPending}
             checked={consent}
             onChange={(event) => setConsent(event.target.checked)}
           />

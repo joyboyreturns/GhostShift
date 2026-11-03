@@ -49,12 +49,18 @@ function ReviewWorkspace({
     onSuccess: (result) => {
       cache.setQueryData(["playbook", result.id], result);
       void cache.invalidateQueries({ queryKey: ["review", result.id] });
+      void cache.invalidateQueries({ queryKey: ["library"] });
     },
   });
   const revision = useMutation({
     mutationFn: () =>
       policyApi.revise(playbook.id, source.id, playbook.title, graph),
-    onSuccess: (result) => navigate(`/review/${result.id}${suffix}`),
+    onSuccess: (result) => {
+      void cache.invalidateQueries({ queryKey: ["library"] });
+      void cache.invalidateQueries({ queryKey: ["history"] });
+      void cache.invalidateQueries({ queryKey: ["document-models"] });
+      navigate(`/review/${result.id}${suffix}`);
+    },
   });
   const importSource = useMutation({
     mutationFn: () =>
@@ -64,6 +70,7 @@ function ReviewWorkspace({
         "markdown",
       ),
     onSuccess: (result) => {
+      void cache.invalidateQueries({ queryKey: ["library"] });
       setSource(result);
       setGraph((existing) => ({
         nodes: existing.nodes.map((node) => ({

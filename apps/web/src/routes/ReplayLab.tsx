@@ -32,6 +32,8 @@ export function ReplayLab() {
     onSuccess: (child) => {
       cache.setQueryData(["session", child.id], child);
       void cache.invalidateQueries({ queryKey: ["library"] });
+      void cache.invalidateQueries({ queryKey: ["replay-runs"] });
+      void cache.invalidateQueries({ queryKey: ["incident-branches"] });
       navigate(`/simulation/${child.id}`);
     },
   });
@@ -198,6 +200,15 @@ export function ReplayLab() {
       </section>
       <section className="panel report-section no-print">
         <h2>Compare recorded runs</h2>
+        {runs.isPending && <p role="status">Loading saved runs…</p>}
+        {runs.error && (
+          <p role="alert">
+            Saved runs could not load: {runs.error.message}{" "}
+            <button className="text-action" onClick={() => void runs.refetch()}>
+              Retry saved runs
+            </button>
+          </p>
+        )}
         <p className="muted">
           For a changed-policy comparison, select the originating run as A and
           its linked proposal rehearsal as B.
