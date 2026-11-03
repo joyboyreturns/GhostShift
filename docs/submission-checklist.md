@@ -3,7 +3,7 @@
 - [x] Both scenarios execute through one deterministic engine without AI keys
 - [x] Replay, branching, actual-event reports and critical tests pass
 - [ ] Public HTTPS application and fresh install verified
-- [ ] Public repository with MIT LICENSE and committed .kiro artifacts
+- [x] Public repository with MIT LICENSE and committed .kiro artifacts (github.com/joyboyreturns/GhostShift)
 - [x] Genuine Kiro engine contribution recorded with transcript and separate Codex attribution
 - [ ] Submission write-up and competition eligibility assessed by entrant
 - [ ] Public YouTube demo and all submission links verified

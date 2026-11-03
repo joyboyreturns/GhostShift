@@ -136,7 +136,8 @@ development keeps its existing database. No public URL has been deployed. See
 
 `make e2e-public` validates the production build and Caddy/API flow on loopback using temporary test
 data. It requires the Caddy CLI (2.11.7 was verified). Docker configuration is provided in deploy/;
-container runtime and real HTTPS remain unverified. CI is configured but has not run on GitHub.
+container runtime and real HTTPS remain unverified. GitHub Actions CI (lint, typecheck, tests, both
+browser suites including the Caddy production path, and dependency audits) passes on `main`.
 
 ## Verification
 

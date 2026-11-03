@@ -26,6 +26,22 @@ Screenshots in docs/screenshots were recaptured at 1280 px and 390 px against a 
 database and visually inspected. `make e2e-public` (needs the Caddy CLI) was not rerun for this
 change. The frontend markup it relies on is unchanged.
 
+## GitHub Actions CI (November 3, 2026)
+
+The workflow first ran after the repository was published. Two pre-existing CI defects were found
+and fixed:
+- `scripts/install-caddy-ci.sh` compared a SHA-256 digest against Caddy's checksum manifest, which
+  publishes SHA-512 values. It now uses SHA-512, and this was checked against the real 2.11.7
+  linux_amd64 archive.
+- `apps/web/package-lock.json` recorded only the darwin-arm64 Tailwind oxide binding (npm
+  optional-dependency bug), so `npm ci` on Linux could not load Tailwind. The other platform
+  entries were added from the npm registry's real tarball and integrity metadata; no versions
+  changed.
+
+After both fixes, the "Verify GhostShift" workflow passed on `main` on ubuntu: install, Caddy
+install, lint, typecheck, tests, `make e2e`, `make e2e-public`, `npm audit --omit=dev` and
+pip-audit.
+
 ## Environment and dependencies
 
 Python 3.12.13; Node 22.22.3; npm 10.9.8; uv 0.11.25. package-lock.json and services/api/uv.lock
@@ -109,7 +125,7 @@ inspected. It uses explicit HTTP loopback test settings and does not prove live 
 
 Caddy 2.11.7 was installed and its configuration validated. Production Compose interpolation passed
 with synthetic validation-only values. Official Caddy checksum manifests were fetched and the Linux
-archive entry verified for the CI installer. Linux installation itself and GitHub CI have not run here;
+archive entry verified for the CI installer. (Linux installation and GitHub CI were later run; see the GitHub Actions section below.)
 all referenced action commits were resolved from their official repositories. M5 dependency
 lockfiles were unchanged; M6 adds only pypdf. `npm audit --omit=dev` found zero vulnerabilities; pip-audit 2.10.1 audited all
 40 Python distributions, including pypdf 6.21.4, with no known findings or skipped packages (M6 rerun). Full npm audit reports 12 moderate
