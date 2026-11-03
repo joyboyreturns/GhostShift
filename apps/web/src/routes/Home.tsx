@@ -10,6 +10,34 @@ import {
   ScrollText,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
+import {
+  Bat,
+  Cobweb,
+  Pumpkin,
+  Spider,
+  Tombstone,
+} from "../components/decor/Spooky";
+
+const graves = [
+  {
+    lines: ["NO RULE", "MATCHED"],
+    title: "Uncovered path",
+    text: "Zero choices fit the facts. The run stops instead of guessing.",
+    tone: "amber",
+  },
+  {
+    lines: ["TWO RULES", "MATCHED"],
+    title: "Potential overlap",
+    text: "More than one choice fits. Precedence is undocumented, so it stops.",
+    tone: "amber",
+  },
+  {
+    lines: ["OFF THE", "MODEL"],
+    title: "Deviation",
+    text: "A person chose a path the model did not match. It is recorded, never hidden.",
+    tone: "coral",
+  },
+];
 
 const pillars = [
   {
@@ -81,6 +109,7 @@ export function Home() {
       </section>
 
       <section className="home-pillars" aria-label="What GhostShift does">
+        <Spider className="pillars-spider" />
         {pillars.map(({ icon: Icon, title, text, tone }, index) => (
           <article className={`pillar pillar-${tone}`} key={title}>
             <span className="pillar-index">0{index + 1}</span>
@@ -91,6 +120,33 @@ export function Home() {
             <p>{text}</p>
           </article>
         ))}
+      </section>
+
+      <section className="home-graveyard" aria-labelledby="graveyard-heading">
+        <Cobweb className="graveyard-web" />
+        <div className="graveyard-copy">
+          <span className="eyebrow">The graveyard of missing rules</span>
+          <h2 id="graveyard-heading">
+            Three ways a playbook gives up the ghost.
+          </h2>
+          <p>
+            The engine never invents an authoritative answer. These are the
+            findings a rehearsal can surface, each linked back to the source.
+          </p>
+        </div>
+        <ul className="graves">
+          {graves.map((grave) => (
+            <li key={grave.title} className={`grave grave-${grave.tone}`}>
+              <Tombstone lines={grave.lines} />
+              <h3>{grave.title}</h3>
+              <p>{grave.text}</p>
+            </li>
+          ))}
+        </ul>
+        <div className="graveyard-pumpkins">
+          <Pumpkin className="pumpkin-lg" />
+          <Pumpkin className="pumpkin-sm" />
+        </div>
       </section>
 
       <section className="home-ritual" aria-labelledby="ritual-heading">
@@ -127,7 +183,17 @@ function HauntedGraph() {
   return (
     <div className="haunted-graph" aria-hidden="true">
       <div className="hg-moon" />
-      <svg viewBox="0 0 460 420" role="presentation" focusable="false">
+      <Bat className="hg-bat hg-bat-1" />
+      <Bat className="hg-bat hg-bat-2" />
+      <Bat className="hg-bat hg-bat-3" />
+      <Pumpkin className="hg-pumpkin hg-pumpkin-1" />
+      <Pumpkin className="hg-pumpkin hg-pumpkin-2" />
+      <svg
+        className="hg-scene"
+        viewBox="0 0 460 420"
+        role="presentation"
+        focusable="false"
+      >
         <defs>
           <linearGradient id="hg-edge" x1="0" x2="1">
             <stop offset="0" stopColor="#a78bfa" stopOpacity="0.2" />

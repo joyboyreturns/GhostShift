@@ -18,6 +18,14 @@ import {
 import { api } from "./lib/api";
 import { Button } from "./components/ui/button";
 import { Home } from "./routes/Home";
+import {
+  Bat,
+  Cobweb,
+  Graveyard,
+  Moon,
+  Pumpkin,
+  Tombstone,
+} from "./components/decor/Spooky";
 const Studio = React.lazy(() =>
   import("./routes/Studio").then((module) => ({ default: module.Studio })),
 );
@@ -95,6 +103,12 @@ export function App() {
       <div className="haunt" aria-hidden="true">
         <div className="haunt-stars" />
         <div className="haunt-grain" />
+        <Moon className="haunt-moon" />
+        <Cobweb className="haunt-web haunt-web-left" />
+        <Cobweb className="haunt-web haunt-web-right" />
+        <Bat className="haunt-bat haunt-bat-1" />
+        <Bat className="haunt-bat haunt-bat-2" />
+        <Bat className="haunt-bat haunt-bat-3" />
       </div>
       <a className="skip-link" href="#main">
         Skip to content
@@ -107,7 +121,10 @@ export function App() {
           <span className="brand-word">
             Ghost<em>Shift</em>
           </span>
-          <span className="preview-label">KIROWEEN 2026 · PREVIEW</span>
+          <span className="preview-label">
+            <Pumpkin className="chip-pumpkin" />
+            KIROWEEN 2026 · PREVIEW
+          </span>
         </Link>
         <nav aria-label="Main navigation">
           <NavLink to="/studio">
@@ -201,7 +218,10 @@ export function App() {
                 path="*"
                 element={
                   <section className="message lost-ghost">
-                    <Ghost aria-hidden="true" />
+                    <div className="lost-scene">
+                      <Tombstone lines={["THIS PAGE", "404"]} />
+                      <Ghost aria-hidden="true" className="lost-ghost-icon" />
+                    </div>
                     <span className="eyebrow">404 / Nothing haunts here</span>
                     <h1>This page gave up the ghost.</h1>
                     <p>
@@ -217,6 +237,7 @@ export function App() {
           </React.Suspense>
         )}
       </main>
+      <Graveyard className="footer-graveyard" />
       <footer className="app-footer">
         <span className="footer-brand">
           <Ghost size={14} aria-hidden="true" /> GhostShift · Kiroween 2026

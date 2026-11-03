@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Cobweb } from "../components/decor/Spooky";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router-dom";
 import { FileText, GitBranch, ScanLine, ArrowUpRight } from "lucide-react";
@@ -149,6 +150,7 @@ export function Studio() {
         </div>
       </div>
       <div className="workbench">
+        <Cobweb className="panel-web" />
         <section className="panel source-panel">
           <header className="panel-heading">
             <FileText size={17} />

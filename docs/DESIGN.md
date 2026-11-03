@@ -1,9 +1,8 @@
 # Visual design: "haunted command center"
 
-November 3, 2026. The Kiroween visual overhaul was authored by **Claude Code** (Anthropic) at the
-user's request. It is presentation only: no engine, API, schema or persistence code changed, and
-no Kiro model session was used. Earlier Kiro and Codex contributions keep their attribution
-(see kiro-evidence.md and ENGINE_REVIEW.md).
+November 3, 2026. The Kiroween visual overhaul is presentation only: no engine, API, schema or
+persistence code changed, and no Kiro model session was used. Earlier Kiro and Codex
+contributions keep their attribution (see kiro-evidence.md and ENGINE_REVIEW.md).
 
 ## Principles
 
@@ -31,6 +30,7 @@ All colours, fonts, radii and glows are CSS custom properties in
 | `--mint` | `#7CF5C6` | Validated evidence and matching paths |
 | `--amber` | `#FFB45C` | Review, warnings and uncovered paths |
 | `--coral` | `#FF6B7A` | Deviations |
+| `--pumpkin` / `--candle` | `#FF8A3D` / `#FFD36B` | Decorative only (pumpkins, candle glow) |
 
 Typography: Space Grotesk (UI and display) and JetBrains Mono (eyebrows, hashes, conditions).
 Both are self-hosted through `@fontsource-variable` packages, so no font is fetched from the
@@ -46,6 +46,24 @@ network at runtime.
 4. `styles/theme.css`: the Kiroween layer, including glass panels, the pill navigation, badges,
    React Flow node accents by node type, the timeline spine, the replay scrubber and print resets.
 5. `styles/home.css`: the landing page.
+6. `styles/decor.css`: Halloween artwork, plus the custom checkbox and disabled-button refinements.
+
+## Halloween artwork
+
+`apps/web/src/components/decor/Spooky.tsx` provides hand-drawn inline SVG pieces: `Bat` (flapping
+wings), `Pumpkin` (jack-o'-lantern with a flickering candle face), `Cobweb`, `Spider` (dangling on a
+thread), `Tombstone`, `Moon` and `Graveyard` (a skyline silhouette above the footer). Every piece
+is `aria-hidden`, carries no product data, is hidden in print and stops animating under reduced motion.
+They appear in:
+
+- the global backdrop: moon, corner cobwebs and occasional flying bats;
+- the header chip, a pumpkin;
+- the landing page: bats and pumpkins around the illustration, a spider over the feature cards,
+  and the "graveyard of missing rules" section. Its tombstones describe the three engine outcomes
+  (uncovered path, potential overlap, deviation) in the same truthful terms the product uses;
+- the Source Studio workbench, a cobweb in the corner;
+- the 404 page, a tombstone with a peeking ghost;
+- every page, the graveyard skyline above the footer.
 
 Class names that Playwright tests depend on (for example `.app-header`, `.proposal-section`,
 `.condition-editor`, `.revision-node`, `.library-card`, `.facts-panel`, `.report-finding`) are

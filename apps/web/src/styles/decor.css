@@ -1,0 +1,537 @@
+/* Halloween artwork (components/decor/Spooky.tsx). Decorative only. */
+:root {
+  --pumpkin: #ff8a3d;
+  --candle: #ffd36b;
+  --bone: #e9e2f5;
+}
+
+/* ---------- Shared pieces ---------- */
+.decor-bat {
+  fill: #2d2058;
+  overflow: visible;
+  filter: drop-shadow(0 0 1px rgb(201 184 255 / 0.9))
+    drop-shadow(0 0 12px rgb(167 139 250 / 0.55));
+}
+.decor-bat .bat-eye {
+  fill: var(--coral);
+}
+.bat-wing {
+  transform-box: fill-box;
+  animation: wing-flap 0.32s ease-in-out infinite alternate;
+}
+.bat-wing-left {
+  transform-origin: right center;
+}
+.bat-wing-right {
+  transform-origin: left center;
+}
+.decor-pumpkin {
+  overflow: visible;
+  filter: drop-shadow(0 0 18px rgb(255 138 61 / 0.45));
+}
+.pumpkin-face {
+  fill: var(--candle);
+  filter: drop-shadow(0 0 4px var(--candle));
+  animation: candle-flicker 2.6s steps(1, end) infinite;
+}
+.decor-web line,
+.decor-web path {
+  stroke: rgb(201 184 255 / 0.2);
+  stroke-width: 0.8;
+}
+.decor-spider {
+  position: absolute;
+  display: block;
+  width: 30px;
+  color: #6a56b8;
+  filter: drop-shadow(0 0 10px rgb(167 139 250 / 0.55));
+  animation: spider-dangle 5s ease-in-out infinite;
+  transform-origin: top center;
+  pointer-events: none;
+}
+.decor-spider::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 1px;
+  height: 90px;
+  background: linear-gradient(transparent, rgb(201 184 255 / 0.5));
+}
+.decor-spider svg {
+  display: block;
+  width: 100%;
+}
+.decor-tomb {
+  overflow: visible;
+}
+.tomb-stone {
+  fill: #241c3d;
+  stroke: #4a3e72;
+  stroke-width: 2;
+}
+.tomb-shine {
+  stroke: rgb(255 255 255 / 0.08);
+  stroke-width: 3;
+}
+.tomb-ground {
+  fill: #2a2147;
+}
+.tomb-grass {
+  stroke: #3e7a52;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.tomb-rip {
+  fill: var(--violet-soft);
+  font: 700 15px var(--font-mono);
+  letter-spacing: 0.12em;
+}
+.tomb-text {
+  fill: var(--muted);
+  font: 600 9.5px var(--font-mono);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- Global backdrop ---------- */
+.haunt-moon {
+  position: absolute;
+  top: 96px;
+  right: 7%;
+  width: 150px;
+  opacity: 0.32;
+  filter: blur(0.3px) drop-shadow(0 0 60px rgb(255 240 200 / 0.6));
+}
+.haunt-web {
+  position: absolute;
+  top: 72px;
+  width: 230px;
+  opacity: 0.85;
+}
+.haunt-web-left {
+  left: 0;
+}
+.haunt-web-right {
+  right: 0;
+  transform: scaleX(-1);
+}
+.haunt-bat {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 44px;
+  opacity: 0;
+  animation: bat-fly 26s linear infinite;
+}
+.haunt-bat-2 {
+  width: 30px;
+  animation-duration: 34s;
+  animation-delay: 9s;
+}
+.haunt-bat-3 {
+  width: 36px;
+  animation-duration: 41s;
+  animation-delay: 19s;
+}
+
+/* ---------- Header chip ---------- */
+.preview-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.chip-pumpkin {
+  width: 14px;
+  height: 13px;
+  filter: drop-shadow(0 0 5px rgb(255 138 61 / 0.7));
+}
+
+/* ---------- Footer graveyard ---------- */
+.footer-graveyard {
+  display: block;
+  width: 100%;
+  height: 130px;
+  margin-top: 70px;
+  margin-bottom: -1px;
+}
+.gy-far {
+  fill: #140d26;
+}
+.gy-near {
+  fill: #07040e;
+}
+.gy-pumpkins {
+  fill: #c4561a;
+  filter: drop-shadow(0 0 10px rgb(255 138 61 / 0.6));
+}
+.gy-pumpkin-eyes {
+  fill: var(--candle);
+  animation: candle-flicker 3.1s steps(1, end) infinite;
+}
+.app-footer {
+  margin-top: 0;
+  background: #07040e;
+  border-top: 0;
+}
+
+/* ---------- Studio ---------- */
+.workbench {
+  position: relative;
+}
+.panel-web {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  transform: scaleX(-1);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+/* ---------- 404 ---------- */
+.lost-scene {
+  position: relative;
+  width: 200px;
+  margin: 0 auto 26px;
+}
+.lost-scene .decor-tomb {
+  width: 170px;
+  display: block;
+}
+.lost-scene .lost-ghost-icon {
+  position: absolute;
+  right: -18px;
+  top: 6px;
+  width: 72px;
+  height: 72px;
+}
+
+/* ---------- Home ---------- */
+.hg-bat {
+  position: absolute;
+  z-index: 2;
+  animation: bat-hover 6s ease-in-out infinite;
+}
+.hg-bat-1 {
+  width: 84px;
+  top: 4%;
+  left: 30%;
+}
+.hg-bat-2 {
+  width: 52px;
+  top: 16%;
+  left: 52%;
+  animation-delay: -2s;
+}
+.hg-bat-3 {
+  width: 38px;
+  top: 0;
+  right: 30%;
+  animation-delay: -4s;
+}
+.hg-pumpkin {
+  position: absolute;
+  z-index: 2;
+}
+.hg-pumpkin-1 {
+  width: 86px;
+  left: 4%;
+  bottom: -2%;
+}
+.hg-pumpkin-2 {
+  width: 54px;
+  left: 22%;
+  bottom: -1%;
+}
+.home-pillars {
+  position: relative;
+}
+.pillars-spider {
+  top: -12px;
+  right: 9%;
+  z-index: 3;
+}
+.home-graveyard {
+  position: relative;
+  overflow: hidden;
+  margin-top: 70px;
+  padding: 40px 34px 34px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(
+      500px 260px at 85% 110%,
+      rgb(255 138 61 / 0.16),
+      transparent 70%
+    ),
+    radial-gradient(
+      600px 300px at 10% 0%,
+      rgb(109 79 216 / 0.18),
+      transparent 70%
+    ),
+    rgb(12 8 24 / 0.7);
+}
+.graveyard-web {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 170px;
+  transform: scaleX(-1);
+  pointer-events: none;
+}
+.graveyard-copy {
+  max-width: 620px;
+}
+.graveyard-copy h2 {
+  font-size: clamp(24px, 2.8vw, 34px);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin: 12px 0 10px;
+}
+.graveyard-copy p {
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0;
+}
+.graves {
+  list-style: none;
+  margin: 34px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+.grave {
+  --tone: var(--amber);
+  text-align: center;
+  padding: 10px 14px 0;
+}
+.grave-coral {
+  --tone: var(--coral);
+}
+.grave .decor-tomb {
+  width: 130px;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 18px 30px rgb(0 0 0 / 0.6))
+    drop-shadow(0 0 22px color-mix(in srgb, var(--tone) 35%, transparent));
+  transition: transform 0.3s var(--ease);
+}
+.grave:hover .decor-tomb {
+  transform: translateY(-4px) rotate(-1.5deg);
+}
+.grave .tomb-rip {
+  fill: var(--tone);
+}
+.grave h3 {
+  margin: 18px 0 6px;
+  font-size: 17px;
+  color: var(--tone);
+}
+.grave p {
+  margin: 0 auto;
+  max-width: 260px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.graveyard-pumpkins {
+  position: absolute;
+  right: 70px;
+  top: 64px;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  pointer-events: none;
+}
+.pumpkin-lg {
+  width: 70px;
+}
+.pumpkin-sm {
+  width: 44px;
+}
+
+/* ---------- Form refinements ---------- */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-grid;
+  place-content: center;
+  width: 18px;
+  height: 18px;
+  margin: 3px 0 0;
+  border: 1.5px solid var(--line-bright);
+  border-radius: 6px;
+  background: var(--surface-0);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+input[type="checkbox"]::after {
+  content: "";
+  width: 10px;
+  height: 6px;
+  border-left: 2px solid #0c0718;
+  border-bottom: 2px solid #0c0718;
+  transform: translateY(-1px) rotate(-45deg) scale(0);
+  transition: transform 0.15s var(--ease);
+}
+input[type="checkbox"]:hover {
+  border-color: var(--mint);
+}
+input[type="checkbox"]:checked {
+  background: var(--mint);
+  border-color: var(--mint);
+  box-shadow: 0 0 14px -2px rgb(124 245 198 / 0.7);
+}
+input[type="checkbox"]:checked::after {
+  transform: translateY(-1px) rotate(-45deg) scale(1);
+}
+.button:disabled,
+.button[aria-disabled="true"] {
+  opacity: 1;
+  cursor: not-allowed;
+  transform: none;
+  color: var(--faint);
+  background: rgb(167 139 250 / 0.07);
+  border-color: var(--line);
+  box-shadow: none;
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes wing-flap {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0.35);
+  }
+}
+@keyframes candle-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  8% {
+    opacity: 0.72;
+  }
+  12% {
+    opacity: 1;
+  }
+  46% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+  83% {
+    opacity: 0.65;
+  }
+  86% {
+    opacity: 1;
+  }
+}
+@keyframes spider-dangle {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(14px) rotate(4deg);
+  }
+}
+@keyframes bat-hover {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(6px, -10px);
+  }
+}
+@keyframes bat-fly {
+  0% {
+    opacity: 0;
+    transform: translate(-8vw, 42vh) scale(0.9);
+  }
+  6% {
+    opacity: 0.9;
+  }
+  25% {
+    transform: translate(22vw, 26vh) scale(1);
+  }
+  50% {
+    transform: translate(50vw, 36vh) scale(0.85);
+  }
+  75% {
+    transform: translate(78vw, 18vh) scale(1);
+  }
+  94% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(108vw, 28vh) scale(0.9);
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+  .graves {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .graveyard-pumpkins {
+    position: static;
+    justify-content: flex-end;
+    margin-top: 12px;
+  }
+  .haunt-web {
+    width: 140px;
+  }
+  .haunt-moon {
+    width: 100px;
+    right: 4%;
+  }
+}
+@media (max-width: 520px) {
+  .home-graveyard {
+    padding: 28px 20px 20px;
+  }
+  .hg-pumpkin-1 {
+    width: 64px;
+  }
+  .hg-pumpkin-2 {
+    width: 40px;
+  }
+  .panel-web {
+    width: 80px;
+  }
+  .footer-graveyard {
+    height: 90px;
+  }
+}
+
+/* ---------- Motion & print ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .haunt-bat {
+    display: none;
+  }
+}
+@media print {
+  .footer-graveyard,
+  .decor-bat,
+  .decor-pumpkin,
+  .decor-web,
+  .decor-spider {
+    display: none !important;
+  }
+}
+@media (max-width: 700px) {
+  .preview-label {
+    display: none;
+  }
+}

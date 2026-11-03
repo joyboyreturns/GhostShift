@@ -4,7 +4,7 @@ November 3, 2026. M0–M6 are implemented locally. Kiro authored the initial eng
 implementation and 60 tests; subsequent Codex review and integration are separately attributed in
 kiro-evidence.md. No additional Kiro model sessions were used for M3, M4, M5 or M6.
 
-## Kiroween visual overhaul re-validation (Claude Code, November 3, 2026)
+## Kiroween visual overhaul re-validation (November 3, 2026)
 
 This was a presentation-only change (see DESIGN.md). It added the self-hosted font packages
 `@fontsource-variable/space-grotesk` 5.3.0 and `@fontsource-variable/jetbrains-mono` 5.3.0 to
@@ -18,6 +18,9 @@ with no dev servers running:
 | `make test` | Pass: 154 backend tests (1 known Starlette/httpx deprecation warning) and 9 frontend unit tests |
 | `make e2e` | Pass: 15 Playwright browser tests |
 | `npm run build` (apps/web) | Pass |
+
+After the Halloween artwork pass (decor.css, components/decor/Spooky.tsx), all five commands
+above were rerun and passed with the same counts.
 
 Screenshots in docs/screenshots were recaptured at 1280 px and 390 px against a freshly seeded
 database and visually inspected. `make e2e-public` (needs the Caddy CLI) was not rerun for this

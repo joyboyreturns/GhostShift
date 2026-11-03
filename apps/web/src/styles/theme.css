@@ -1056,7 +1056,7 @@ tbody tr:hover {
   filter: drop-shadow(0 0 16px rgb(167 139 250 / 0.8));
   animation: ghost-bob 1.8s ease-in-out infinite;
 }
-.lost-ghost svg {
+.lost-ghost .lost-ghost-icon {
   width: 96px;
   height: 96px;
   color: var(--violet-soft);
@@ -1125,10 +1125,7 @@ tbody tr:hover {
 }
 
 /* ---------- Refinements ---------- */
-.lost-ghost svg {
-  display: block;
-  margin: 0 auto 28px;
-}
+
 .session-actions > a:not(.button),
 .library-heading .session-actions > a:not(.button) {
   display: inline-flex;

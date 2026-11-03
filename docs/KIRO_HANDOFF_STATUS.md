@@ -34,7 +34,7 @@ The integrated M3 snapshot is anchored by `refs/ghostshift/baselines/m3-persiste
 Codex implemented M4 (policy review, immutable revisions, proposals), M5 (public-demo isolation and
 limits) and M6 (library, custom scenarios, version history, PDF provenance, Replay Lab and portable
 reports) locally, with no further Kiro calls. See POLICY_REVIEW.md, PUBLIC_DEMO.md and
-PRODUCT_COMPLETION.md. Claude Code then made a presentation-only visual overhaul (DESIGN.md).
+PRODUCT_COMPLETION.md. A presentation-only visual overhaul followed (DESIGN.md).
 The Kiro contribution record is unchanged: there is still exactly one Kiro session. No new Kiro
 work is planned unless the user explicitly requests it. Remaining work is deployment and
 submission only (see submission-checklist.md).
