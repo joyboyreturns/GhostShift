@@ -81,18 +81,18 @@ export function Home() {
             Find it first.
           </h1>
           <p className="home-lede">
-            GhostShift turns static procedures into source-linked decision
-            graphs, then haunts them with realistic disruptions. Expose missing
-            or conflicting instructions before a real incident does.
+            The vendor is late. Rain is coming. The indoor space is full. Step
+            into a fictional night shift and discover where the procedure runs
+            out of answers — while there’s still time to test a change.
           </p>
           <div className="hero-actions">
             <Button asChild>
-              <Link to="/studio">
-                Explore demo <ArrowRight size={18} />
+              <Link to="/simulation?scenario=night-market">
+                Start your shift <ArrowRight size={18} />
               </Link>
             </Button>
             <Button asChild variant="outline">
-              <Link to="/import">Import procedure</Link>
+              <Link to="/studio">Explore demo & source</Link>
             </Button>
             <Button asChild variant="ghost">
               <Link to="/guide">
@@ -101,8 +101,10 @@ export function Home() {
             </Button>
           </div>
           <p className="home-foot">
+            <Link to="/import">Bring your own procedure ↗</Link>
+            <br />
             Fictional demo data · No AI key required · Deterministic, replayable
-            runs
+            runs · <Link to="/guide#built-with-kiro">Built with Kiro ↗</Link>
           </p>
         </div>
         <HauntedGraph />

@@ -189,3 +189,14 @@ missing features. The existing Kiro/Codex engine is unchanged, no further Kiro m
 and deployment was explicitly excluded. Optional AI assistance remains unbuilt under the active
 no-LLM dependency constraint; collaboration/integrations remain P2. Full hackathon acceptance still
 requires public hosting/repository/video and final submission checks.
+
+
+### Cinematic incident experience — November 3, 2026
+
+Codex added a reusable API-backed incident view, authored exact-version demo briefings, event-derived
+dispatch playback and fact changes, recorded branch relationships, focused proposal editing and
+comparative debriefs. The existing engine, API contracts and persistence schema are unchanged.
+No additional Kiro sessions or runtime LLM service were used. The submission draft and 170-second
+recording script are prepared locally. Public repository visibility was verified; current changes
+still require publication. Actual hosting, video upload and submission remain separate acceptance
+work. See INCIDENT_EXPERIENCE.md, submission-draft.md and VALIDATION.md.

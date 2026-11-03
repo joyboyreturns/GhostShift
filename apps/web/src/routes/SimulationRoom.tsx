@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { FileText, GitBranch, RotateCcw, ShieldCheck } from "lucide-react";
-import { simulationApi } from "../lib/api";
+import { api, simulationApi } from "../lib/api";
 import { Button } from "../components/ui/button";
 import { Evidence } from "../features/simulation/Evidence";
 import { Timeline } from "../features/simulation/Timeline";
@@ -13,10 +18,16 @@ import {
 } from "../features/simulation/presentation";
 import { ProposalForm } from "../features/policy/ProposalForm";
 import { Comparison } from "../features/reports/Comparison";
+import { IncidentFeed } from "../features/incident/IncidentFeed";
+import { BranchMap } from "../features/incident/BranchMap";
+import { storyFor } from "../features/incident/narrative";
 
 export function SimulationRoom() {
   const { sessionId = "" } = useParams();
   const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
+  const inspect = params.get("view") === "inspect";
+  const catalog = useQuery({ queryKey: ["catalog"], queryFn: api.catalog });
   const cache = useQueryClient();
   const [comparisonId, setComparisonId] = useState<string>();
   const query = useQuery({
@@ -45,6 +56,7 @@ export function SimulationRoom() {
     mutationFn: (index: number) => simulationApi.fork(sessionId, index),
     onSuccess: (session) => {
       cache.setQueryData(["session", session.id], session);
+      void cache.invalidateQueries({ queryKey: ["incident-branches"] });
       choose.reset();
       replay.reset();
       navigate(`/simulation/${session.id}`);
@@ -70,6 +82,12 @@ export function SimulationRoom() {
     );
   const session = query.data;
   const result = session.result;
+  const story = storyFor(
+    session.scenario_id,
+    session.playbook_version_id,
+    catalog.data?.demos ?? [],
+    session.document_id,
+  );
   const node = result.input_snapshot.graph.nodes.find(
     (node) => node.id === session.current_node_id,
   );
@@ -88,10 +106,13 @@ export function SimulationRoom() {
     replay.data?.session_id === session.id &&
     replay.data.last_state_hash === session.events.at(-1)?.state_hash;
   return (
-    <div className="simulation-page">
+    <div
+      className={`simulation-page ${inspect ? "inspection-view" : "incident-view"}`}
+    >
       <section className="simulation-heading">
         <div>
           <div className="eyebrow">Simulation Room / Fictional rehearsal</div>
+          {story && <p className="incident-chapter">{story.title}</p>}
           <h1>{result.scenario_title}</h1>
           <p className="muted">
             A source-linked rehearsal. The original procedure remains unchanged.
@@ -117,6 +138,35 @@ export function SimulationRoom() {
           </Button>
         </div>
       </section>
+      <nav className="incident-view-toggle" aria-label="Rehearsal presentation">
+        <button
+          aria-pressed={!inspect}
+          onClick={() =>
+            setParams((previous) => {
+              const next = new URLSearchParams(previous);
+              next.set("view", "incident");
+              return next;
+            })
+          }
+        >
+          Incident view
+        </button>
+        <button
+          aria-pressed={inspect}
+          onClick={() =>
+            setParams((previous) => {
+              const next = new URLSearchParams(previous);
+              next.set("view", "inspect");
+              return next;
+            })
+          }
+        >
+          Inspect conditions & history
+        </button>
+      </nav>
+      <p className="sr-only" role="status">
+        Current rehearsal: {statusLabels[session.status]}. {node?.label}
+      </p>
       <div className="session-strip">
         <span className="badge amber">
           {result.playbook_authority === "draft"
@@ -170,169 +220,230 @@ export function SimulationRoom() {
           </Link>
         </p>
       )}
-      <div className="simulation-grid">
-        <aside className="panel facts-panel">
-          <header className="panel-heading">
-            <h2>Current facts</h2>
-          </header>
-          <dl>
-            {Object.entries(result.final_facts).map(([field, value]) => (
-              <div key={field}>
-                <dt>{factLabel(field)}</dt>
-                <dd>{String(value)}</dd>
-              </div>
-            ))}
-          </dl>
-          <div className="facts-note">
-            <span className="eyebrow">Pinned procedure</span>
-            <p>{session.playbook_version_id}</p>
-            <Link to={`/studio?playbook=${session.playbook_version_id}`}>
-              Inspect Source Studio ↗
-            </Link>
-            <p className="muted">
-              Evidence below uses the exact source cited by this run’s snapshot.
-            </p>
-          </div>
-        </aside>
-        <section
-          className={`panel decision-panel ${problem ? "decision-warning" : ""}`}
-          aria-label="Active decision"
-        >
-          <span className={`badge ${problem ? "amber" : "mint"}`}>
-            {statusLabels[session.status]}
-          </span>
-          <h2>{node?.label ?? "End of modeled workflow"}</h2>
-          {session.status === "uncovered" && (
-            <div className="stop-explanation">
-              <h3>The procedure has no matching path.</h3>
-              <p>
-                No modeled choice covers these facts. The rehearsal has stopped
-                for human review; it will not invent an authoritative action.
-              </p>
+      <div className="command-workbench">
+        {!inspect && (
+          <IncidentFeed
+            key={`feed-${session.id}`}
+            session={session}
+            story={story}
+          />
+        )}
+        <div className="simulation-grid">
+          <aside className="panel facts-panel">
+            <header className="panel-heading">
+              <h2>Current facts</h2>
+            </header>
+            <dl>
+              {Object.entries(result.final_facts).map(([field, value]) => (
+                <div key={field}>
+                  <dt>{factLabel(field)}</dt>
+                  <dd>{String(value)}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="facts-note">
+              <span className="eyebrow">Pinned procedure</span>
+              <p>{session.playbook_version_id}</p>
+              <Link to={`/studio?playbook=${session.playbook_version_id}`}>
+                Inspect Source Studio ↗
+              </Link>
               <p className="muted">
-                Inspect the conditions and source context below, or fork an
-                earlier decision. A fork keeps the same procedure.
+                Evidence below uses the exact source cited by this run’s
+                snapshot.
               </p>
             </div>
-          )}
-          {session.status === "overlap" && (
-            <div className="stop-explanation">
-              <h3>More than one rule matches.</h3>
+          </aside>
+          <section
+            id="active-decision"
+            tabIndex={-1}
+            className={`panel decision-panel ${problem ? "decision-warning" : ""}`}
+            aria-label="Active decision"
+          >
+            <span className={`badge ${problem ? "amber" : "mint"}`}>
+              {statusLabels[session.status]}
+            </span>
+            <h2>{node?.label ?? "End of modeled workflow"}</h2>
+            {session.status === "uncovered" && (
+              <div className="stop-explanation">
+                <h3>The procedure has no matching path.</h3>
+                <p>
+                  No modeled choice covers these facts. The rehearsal has
+                  stopped for human review; it will not invent an authoritative
+                  action.
+                </p>
+                <p className="muted">
+                  Inspect the conditions and source context below, or fork an
+                  earlier decision. A fork keeps the same procedure.
+                </p>
+              </div>
+            )}
+            {session.status === "overlap" && (
+              <div className="stop-explanation">
+                <h3>More than one rule matches.</h3>
+                <p>
+                  {checkpoint?.matching_choice_ids.length} modeled choices
+                  apply. No precedence is established, so the rehearsal has
+                  stopped for human review.
+                </p>
+              </div>
+            )}
+            {session.status === "budget_exceeded" && (
+              <p role="alert">
+                The traversal limit was reached. History is preserved for
+                review.
+              </p>
+            )}
+            {(session.status === "completed" ||
+              session.status === "deviation") && (
               <p>
-                {checkpoint?.matching_choice_ids.length} modeled choices apply.
-                No precedence is established, so the rehearsal has stopped for
-                human review.
+                The modeled workflow reached its end. Review the decisions,
+                evidence and deviations in the session report.
               </p>
-            </div>
-          )}
-          {session.status === "budget_exceeded" && (
-            <p role="alert">
-              The traversal limit was reached. History is preserved for review.
-            </p>
-          )}
-          {(session.status === "completed" ||
-            session.status === "deviation") && (
-            <p>
-              The modeled workflow reached its end. Review the decisions,
-              evidence and deviations in the session report.
-            </p>
-          )}
-          {session.status === "awaiting_decision" && (
-            <p className="muted">
-              Choose an action. A nonmatching choice will be recorded as a
-              deviation from the model.
-            </p>
-          )}
-          <div className="decision-choices">
-            {node?.choices.map((choice) => {
-              const outcome = checkpoint?.choice_outcomes.find(
-                (outcome) => outcome.choice_id === choice.id,
-              );
-              return (
-                <article
-                  className={`decision-choice ${outcome?.matched ? "choice-matches" : ""}`}
-                  key={choice.id}
-                >
-                  <div className="choice-heading">
-                    <h3>{choice.label}</h3>
-                    <span className={`badge ${outcome?.matched ? "mint" : ""}`}>
-                      {outcome?.matched ? "Matches model" : "Does not match"}
-                    </span>
-                  </div>
-                  <ul className="condition-list">
-                    {choice.conditions.map((condition, index) => {
-                      const diagnostic = outcome?.condition_outcomes[index];
-                      return (
-                        <li key={index}>
-                          <span>
-                            {factLabel(condition.field)}{" "}
-                            <span className="condition-operator">
-                              {operatorLabels[condition.operator]}
-                            </span>{" "}
-                            {Array.isArray(condition.value)
-                              ? condition.value.join(", ")
-                              : String(condition.value)}
-                          </span>
-                          <span
-                            className={
-                              diagnostic?.result
-                                ? "condition-pass"
-                                : "condition-fail"
-                            }
-                          >
-                            {diagnostic?.missing_fact
-                              ? "Fact missing"
-                              : diagnostic?.type_mismatch
-                                ? "Incompatible fact"
-                                : diagnostic?.result
-                                  ? "Matches"
-                                  : "Not met"}
-                          </span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                  <span className="muted">
-                    {choice.source_refs.length} source citations · human review{" "}
-                    {result.playbook_authority === "draft"
-                      ? "pending"
-                      : "recorded"}
-                  </span>
-                  {!stopped && (
-                    <Button
-                      variant={outcome?.matched ? "default" : "outline"}
-                      disabled={choose.isPending}
-                      onClick={() =>
-                        choose.mutate({
-                          choiceId: choice.id,
-                          revision: session.revision,
-                        })
-                      }
-                    >
-                      {choose.isPending
-                        ? "Saving choice…"
-                        : outcome?.matched
-                          ? `Choose: ${choice.label}`
-                          : `Choose as deviation: ${choice.label}`}
-                    </Button>
+            )}
+            {session.status === "awaiting_decision" && (
+              <p className="muted">
+                Choose an action. A nonmatching choice will be recorded as a
+                deviation from the model.
+              </p>
+            )}
+            {problem && (
+              <>
+                {story &&
+                  session.scenario_id === "night-market" &&
+                  session.current_node_id === "weather" && (
+                    <p className="modeled-assumption">
+                      The indoor-capacity guard is a modeled assumption
+                      requiring review. The weather citation does not establish
+                      that guard or a response to exhausted capacity.
+                    </p>
                   )}
-                </article>
-              );
-            })}
+                <nav
+                  className="gap-actions"
+                  aria-label="Investigate this finding"
+                >
+                  <a href="#incident-evidence">Inspect the source ↓</a>
+                  <Link to={`/replay/${session.id}`}>Rewind a decision ↗</Link>
+                  <a
+                    href="#incident-proposal"
+                    onClick={() => {
+                      const details =
+                        document.getElementById("incident-proposal");
+                      if (details instanceof HTMLDetailsElement)
+                        details.open = true;
+                    }}
+                  >
+                    Test a proposed rule ↓
+                  </a>
+                </nav>
+              </>
+            )}
+            <div className="decision-choices">
+              {node?.choices.map((choice) => {
+                const outcome = checkpoint?.choice_outcomes.find(
+                  (outcome) => outcome.choice_id === choice.id,
+                );
+                return (
+                  <article
+                    className={`decision-choice ${outcome?.matched ? "choice-matches" : ""}`}
+                    key={choice.id}
+                  >
+                    <div className="choice-heading">
+                      <h3>{choice.label}</h3>
+                      <span
+                        className={`badge ${outcome?.matched ? "mint" : ""}`}
+                      >
+                        {outcome?.matched ? "Matches model" : "Does not match"}
+                      </span>
+                    </div>
+                    <details
+                      className="choice-diagnostics"
+                      open={inspect || problem}
+                    >
+                      <summary>
+                        Why this choice{" "}
+                        {outcome?.matched ? "matches" : "does not match"}
+                      </summary>
+                      <ul className="condition-list">
+                        {choice.conditions.map((condition, index) => {
+                          const diagnostic = outcome?.condition_outcomes[index];
+                          return (
+                            <li key={index}>
+                              <span>
+                                {factLabel(condition.field)}{" "}
+                                <span className="condition-operator">
+                                  {operatorLabels[condition.operator]}
+                                </span>{" "}
+                                {Array.isArray(condition.value)
+                                  ? condition.value.join(", ")
+                                  : String(condition.value)}
+                              </span>
+                              <span
+                                className={
+                                  diagnostic?.result
+                                    ? "condition-pass"
+                                    : "condition-fail"
+                                }
+                              >
+                                {diagnostic?.missing_fact
+                                  ? "Fact missing"
+                                  : diagnostic?.type_mismatch
+                                    ? "Incompatible fact"
+                                    : diagnostic?.result
+                                      ? "Matches"
+                                      : "Not met"}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </details>
+                    <span className="muted">
+                      {choice.source_refs.length} source citations · human
+                      review{" "}
+                      {result.playbook_authority === "draft"
+                        ? "pending"
+                        : "recorded"}
+                    </span>
+                    {!stopped && (
+                      <Button
+                        variant={outcome?.matched ? "default" : "outline"}
+                        disabled={choose.isPending}
+                        onClick={() =>
+                          choose.mutate({
+                            choiceId: choice.id,
+                            revision: session.revision,
+                          })
+                        }
+                      >
+                        {choose.isPending
+                          ? "Saving choice…"
+                          : outcome?.matched
+                            ? `Choose: ${choice.label}`
+                            : `Choose as deviation: ${choice.label}`}
+                      </Button>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
+            {result.deviations.length > 0 && (
+              <p className="deviation-notice">
+                {result.deviations.length} deviation
+                {result.deviations.length === 1 ? "" : "s"} recorded in this
+                run.
+              </p>
+            )}
+          </section>
+          <div className={inspect ? "" : "incident-history"}>
+            <Timeline
+              session={session}
+              pending={fork.isPending}
+              onFork={(index) => fork.mutate(index)}
+            />
           </div>
-          {result.deviations.length > 0 && (
-            <p className="deviation-notice">
-              {result.deviations.length} deviation
-              {result.deviations.length === 1 ? "" : "s"} recorded in this run.
-            </p>
-          )}
-        </section>
-        <Timeline
-          session={session}
-          pending={fork.isPending}
-          onFork={(index) => fork.mutate(index)}
-        />
+        </div>
       </div>
+      <BranchMap key={`branches-${session.id}`} session={session} />
       {session.parent_session_id && comparisonId === session.id && (
         <Comparison
           parentId={session.parent_session_id}
@@ -340,16 +451,45 @@ export function SimulationRoom() {
         />
       )}
       {problem && (
-        <details className="panel report-section">
+        <details id="incident-proposal" className="panel report-section">
           <summary>Propose a rule change</summary>
           <ProposalForm key={session.id} session={session} />
         </details>
       )}
-      <Evidence
-        documentId={session.document_id}
-        refs={refs}
-        expanded={problem}
-      />
+      <div id="incident-evidence" tabIndex={-1}>
+        <Evidence
+          documentId={session.document_id}
+          refs={refs}
+          expanded={problem}
+        />
+      </div>
+      {stopped && (
+        <section className="panel incident-debrief" aria-label="Shift debrief">
+          <span className="eyebrow">Shift debrief / Evidence to take away</span>
+          <h2>What did this rehearsal establish?</h2>
+          <p>
+            {statusLabels[session.status]} · {result.decisions_made.length}{" "}
+            recorded decisions · {result.deviations.length} deviations.
+          </p>
+          <p>
+            This result describes the model and these scenario inputs. A
+            proposed rule remains unapproved, including when its rehearsal
+            completes.
+          </p>
+          <div className="session-actions">
+            <Link to={`/simulation/${session.id}/report`}>
+              Review & export this run ↗
+            </Link>
+            {session.parent_session_id && (
+              <Link
+                to={`/reports/compare?${new URLSearchParams({ left: session.parent_session_id, right: session.id })}`}
+              >
+                Export parent / alternate comparison ↗
+              </Link>
+            )}
+          </div>
+        </section>
+      )}
       <p className="rehearsal-footnote">{result.rehearsal_notice}</p>
     </div>
   );

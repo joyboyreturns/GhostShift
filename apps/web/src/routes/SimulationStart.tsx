@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowRight, GitBranch } from "lucide-react";
 import { api, simulationApi, workspaceApi } from "../lib/api";
 import { Button } from "../components/ui/button";
+import { storyFor } from "../features/incident/narrative";
 import { factLabel } from "../features/simulation/presentation";
 
 export function SimulationStart() {
@@ -73,12 +74,28 @@ export function SimulationStart() {
       </section>
     );
   const data = scenario.data;
+  const story = storyFor(
+    data.id,
+    versionId ?? "",
+    catalog.data?.demos ?? [],
+    playbook.data?.document_id,
+  );
   return (
     <section className="scenario-start">
       <span className="eyebrow">Simulation Room / Fictional rehearsals</span>
-      <h1>
-        Rehearse the unexpected<span>.</span>
-      </h1>
+      <h1>{story?.title ?? "Rehearse the unexpected."}</h1>
+      {story && (
+        <section className="shift-briefing panel" aria-label="Shift briefing">
+          <span className="eyebrow">
+            Fictional scene-setting · {story.role}
+          </span>
+          <p className="briefing-lede">{story.briefing}</p>
+          <p>{story.objective}</p>
+          <span className="badge">
+            Your pace · No countdown · Sound off by default
+          </span>
+        </section>
+      )}
       <p className="muted">
         Make decisions against a pinned copy of the procedure. Every action and
         finding stays linked to the source.

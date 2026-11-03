@@ -9,7 +9,8 @@ Milestone 4 adds manual rule authoring, human review, immutable source/playbook 
 and explicitly unapproved proposed-policy replay/comparison. See docs/POLICY_REVIEW.md.
 Milestone 5 adds tested request/write limits, anonymous database isolation, expiry/retention, quota
 handling, backup restoration checks, Caddy production-path tests and deployment/CI configuration.
-See docs/PUBLIC_DEMO.md and docs/DEPLOYMENT.md. Live server/Docker/TLS verification remains.
+See docs/PUBLIC_DEMO.md and docs/DEPLOYMENT.md. Local Docker runtime, restart persistence and expiry
+cleanup are now verified; target-server deployment/TLS verification remains. See docs/RELEASE_READINESS.md.
 Milestone 6 adds library/search, custom scenarios, version history, Replay Lab, action-step editing,
 PDF text/page provenance, onboarding and portable comparison reports. See docs/PRODUCT_COMPLETION.md.
 Deployment was explicitly excluded from this pass. No new engine or Kiro session changes.

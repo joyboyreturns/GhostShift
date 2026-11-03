@@ -1,4 +1,4 @@
-.PHONY: install dev api web seed test lint typecheck format e2e e2e-public prepare-demo clean-demo engine-demo
+.PHONY: install dev api web seed test lint typecheck format e2e e2e-public e2e-containers prepare-demo clean-demo engine-demo record-demo
 install:
 	cd apps/web && npm ci
 	cd services/api && uv sync --locked
@@ -33,3 +33,11 @@ prepare-demo:
 	cd services/api && uv run python -m app.services.demo_admin prepare
 clean-demo:
 	cd services/api && uv run python -m app.services.demo_admin cleanup
+
+# Runs actual production images against disposable loopback-only workspaces.
+e2e-containers:
+	python3 scripts/verify-containers.py
+
+# macOS recording helper; requires local say, Caddy and FFmpeg (or FFMPEG_PATH).
+record-demo:
+	node scripts/record-demo.mjs

@@ -21,3 +21,5 @@ test-results/
 !.env.example
 !deploy/.env.public.example
 data/
+
+artifacts/

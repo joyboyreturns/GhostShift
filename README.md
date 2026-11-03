@@ -22,11 +22,13 @@ the actual outcomes. Built for Kiroween 2026 (Frankenstein category).
 ### 60-second tour
 
 1. `make install && make dev`, then open http://localhost:5173.
-2. **Explore demo** opens Source Studio. Click *Can we move indoors?* and the cited weather clause lights up.
-3. **Rehearse scenario**: acknowledge the fictional draft, start, and choose *Escalate to operations lead*.
+2. **Start your shift** opens the fictional Night Market briefing. Acknowledge the draft and start.
+3. Choose *Escalate to operations lead*. **Show all updates** reveals the actual recorded dispatches.
 4. Rain risk rises to 85 and indoor capacity is 0. **The procedure has no matching path.** That's the ghost.
-5. Click **Fork here** on the vendor decision, choose the alternate, then **Compare with parent**.
-6. Open **Session report** to print it or download the JSON evidence.
+5. **Test a proposed rule** opens a human-authored experiment. Add a choice for current facts, enter
+   your action and reason, save, acknowledge its unapproved status, then rehearse and compare.
+6. Verify replay, then export the parent/alternate comparison. Source Studio and Replay Lab remain
+   available for inspecting citations and same-policy checkpoint forks.
 
 | Source Studio | Simulation Room | Replay Lab |
 | --- | --- | --- |
@@ -51,10 +53,16 @@ custom scenarios, version history, PDF text import, Replay Lab and portable comp
 also implemented. See [local product completion](docs/PRODUCT_COMPLETION.md).
 No AI key or external service is required by the running application.
 
+The cinematic incident view adds a user-paced dispatch log, actual fact changes, source-linked
+findings, recorded branch relationships and a before/after debrief. Exact demo versions receive
+authored fictional atmosphere; custom/proposed versions receive neutral event-derived text.
+See [incident experience](docs/INCIDENT_EXPERIENCE.md), the prepared [submission draft](docs/submission-draft.md),
+and [release readiness](docs/RELEASE_READINESS.md) for the local narrated video and remaining launch steps.
+
 ## Build status
 
 Dependencies and both lockfiles are complete. Backend/frontend lint, type checks, 154 backend tests,
-9 frontend unit tests, 15 development browser tests plus one production-path Caddy browser test, migrations/seeding, and the production frontend
+15 frontend unit tests, 19 development browser tests plus one production-path Caddy browser test, migrations/seeding, and the production frontend
 build pass. Desktop/mobile Source Studio, Simulation Room, library, PDF source and report screenshots were inspected,
 and lint, typecheck, unit and browser tests were rerun after the Kiroween visual overhaul.
 See docs/VALIDATION.md for exact commands/results and remaining limits.
@@ -135,8 +143,8 @@ development keeps its existing database. No public URL has been deployed. See
 [hardening and limits](docs/PUBLIC_DEMO.md) and [server handoff](docs/DEPLOYMENT.md).
 
 `make e2e-public` validates the production build and Caddy/API flow on loopback using temporary test
-data. It requires the Caddy CLI (2.11.7 was verified). Docker configuration is provided in deploy/;
-container runtime and real HTTPS remain unverified. GitHub Actions CI (lint, typecheck, tests, both
+data. It requires the Caddy CLI (2.11.7 was verified). Production Docker images now pass a local Linux/arm64 browser journey, restart persistence and
+expiry cleanup (`make e2e-containers`). Target-server deployment and real HTTPS remain unverified. GitHub Actions CI (lint, typecheck, tests, both
 browser suites including the Caddy production path, and dependency audits) passes on `main`.
 
 ## Verification

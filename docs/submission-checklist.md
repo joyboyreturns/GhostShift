@@ -5,12 +5,16 @@
 - [ ] Public HTTPS application and fresh install verified
 - [x] Public repository with MIT LICENSE and committed .kiro artifacts (github.com/joyboyreturns/GhostShift)
 - [x] Genuine Kiro engine contribution recorded with transcript and separate Codex attribution
-- [ ] Submission write-up and competition eligibility assessed by entrant
+- [x] Submission write-up draft and local narrated 170-second demo prepared
+- [ ] Competition eligibility and final write-up assessed by entrant
 - [ ] Public YouTube demo and all submission links verified
-- [ ] Official eligibility/category/deadline rechecked before submission
-- [ ] Submit by December 3 target; user-provided deadline December 4, 2 PM Pacific
+- [x] Official overview/rules checked November 3, 2026; see submission-draft.md
+- [ ] Entrant eligibility/category/deadline rechecked immediately before submission
+- [ ] Submit by December 3 target; official listed deadline December 4, 2026, 2 PM Pacific
 
 M0–M6 are implemented locally, including review/revisions, proposed-policy replay and tested public
 isolation/limits/retention, own-procedure scenarios, PDF provenance, Replay Lab and portable reports.
-Deployment/publication is intentionally deferred by the user. This does not satisfy full submission acceptance: target-server runtime,
-HTTPS hosting, repository publication and the video/submission still require completion.
+The latest request authorizes completing remaining release work. Full submission acceptance still requires target-server runtime,
+HTTPS hosting, publication of current changes, and public video/final submission.
+The repository is already public (verified November 3, 2026). Submission copy and a 170-second
+recording script are prepared in submission-draft.md and demo-script.md.

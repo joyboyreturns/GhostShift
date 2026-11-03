@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router-dom";
 import { simulationApi } from "../lib/api";
 import { Button } from "../components/ui/button";
+import { ComparisonStory } from "../features/reports/ComparisonStory";
 import { statusLabels } from "../features/simulation/presentation";
 export function ComparisonReport() {
   const [params] = useSearchParams();
@@ -64,6 +65,7 @@ export function ComparisonReport() {
         The JSON export contains both actual reports, cited source text, pinned
         replay inputs and durable logical events.
       </p>
+      <ComparisonStory left={comparison.left} right={comparison.right} />
       <div className="comparison-report-grid">
         {[comparison.left, comparison.right].map((report, index) => (
           <section className="panel report-section" key={report.session_id}>

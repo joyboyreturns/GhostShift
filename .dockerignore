@@ -17,3 +17,5 @@ data/
 **/.hypothesis
 **/test-results
 **/playwright-report
+
+artifacts/

@@ -105,7 +105,58 @@ export function ProposalForm({ session }: { session: SimulationSession }) {
           >
             Add choice for current facts
           </Button>
-          <ChoiceEditor choices={choices} onChange={setChoices} nodes={nodes} />
+          <details className="existing-proposal-choices">
+            <summary>
+              Inspect or edit the existing {node.choices.length} choices
+            </summary>
+            <ChoiceEditor
+              choices={choices.filter((choice) =>
+                node.choices.some((original) => original.id === choice.id),
+              )}
+              onChange={(existing) =>
+                setChoices([
+                  ...existing,
+                  ...choices.filter(
+                    (choice) =>
+                      !node.choices.some(
+                        (original) => original.id === choice.id,
+                      ),
+                  ),
+                ])
+              }
+              nodes={nodes}
+            />
+          </details>
+          {choices.some(
+            (choice) =>
+              !node.choices.some((original) => original.id === choice.id),
+          ) && (
+            <>
+              <h3>Your proposed choices · uncited assumptions</h3>
+              <ChoiceEditor
+                choices={choices.filter(
+                  (choice) =>
+                    !node.choices.some((original) => original.id === choice.id),
+                )}
+                onChange={(added) =>
+                  setChoices([
+                    ...choices.filter((choice) =>
+                      node.choices.some(
+                        (original) => original.id === choice.id,
+                      ),
+                    ),
+                    ...added,
+                  ])
+                }
+                nodes={nodes}
+              />
+            </>
+          )}
+          <p className="muted">
+            Review the action, exact-fact conditions and destination before
+            saving. This experiment covers these inputs only; it does not
+            establish a general policy.
+          </p>
           <Button disabled={save.isPending || !rationale.trim()}>
             {save.isPending ? "Saving…" : "Save unapproved proposal"}
           </Button>

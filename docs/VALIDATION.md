@@ -145,8 +145,8 @@ runtime, DNS, HTTPS/cookies, persistent-volume behavior and the acceptance journ
 requires human judgment; valid citations alone are insufficient. Manual authoring supports decision/action addition and explicit action/decision removal with
 replacement; saved topology and citations are server validated. Custom scenario authoring, PDF text
 extraction, version history and Replay Lab are implemented. AI extraction/suggestions remain optional
-and unbuilt under the active no-LLM dependency constraint. No public repository,
-hosted URL or video submission is claimed.
+and unbuilt under the active no-LLM dependency constraint. At that verification point no public repository, hosted URL or video submission was claimed.
+The repository is now publicly readable; see the incident-experience verification below.
 
 
 ## M6 local product verification
@@ -177,3 +177,62 @@ prove Linux resource enforcement or Docker runtime. See PRODUCT_COMPLETION.md fo
 
 Engine files and deployment/CI configuration have no diff from the M5 tree snapshot. No further Kiro
 model sessions were used. These results describe local implementation checks, not hosted acceptance.
+
+
+## Cinematic incident experience verification — November 3, 2026
+
+Codex implemented and verified the incident presentation around the existing engine. No backend,
+engine, migration, lockfile or original Kiro-artifact changes were needed. No Kiro session was launched.
+
+| Check actually run | Result |
+| --- | --- |
+| `make lint` | Backend Ruff/format and frontend ESLint/Prettier passed, no lint warnings. |
+| `make typecheck` | mypy on 35 application files and TypeScript passed. |
+| `make test` | 154 backend tests and 15 frontend tests passed. |
+| `DATABASE_URL=sqlite:////private/tmp/ghostshift-incident-e2e.db make e2e` | 19 real browser tests passed; final full run 46.3 seconds. |
+| `make e2e-public` | Production frontend build and the Caddy/API public-workspace browser journey passed; final run 15.6 seconds. |
+| `git diff --check` | Passed. |
+
+Final frontend lint/typecheck were also rerun after adding keyboard scrolling to the dispatch log.
+The existing FastAPI test-client dependency emits one Starlette/httpx deprecation warning during
+backend tests; no new test warning or failure is treated as a success. Initial checks required access
+to the existing uv cache outside the filesystem sandbox; approved reruns completed the checks.
+
+Six additional frontend tests cover exact catalog/version/source matching, fallback for custom or
+proposed versions, no premature inject narration, typed fact deltas, overlap and unchanged updates,
+actual parent/sibling/child relationships, and differing recorded choices. Four additional browser
+tests cover the full incident → proposal → comparison → parsed export workflow with unchanged parent,
+inspect-view refresh, keyboard dispatch playback/scrolling, mobile/reduced-motion layout and source
+evidence, failed-choice recovery, and unavailable-audio fallback. Existing custom-scenario, fork,
+replay and public isolation tests remain in the passing suites.
+
+Visual inspection covered the landing page, briefing, desktop command room, mobile Support run and
+comparison report. A mobile branch-heading overlap found in inspection was corrected and a bounding-box
+assertion now checks that heading against its explanatory text. A React sibling-key collision found
+by the new full-journey test was corrected. Captures are listed in screenshots/README.md. The final report capture was refreshed with a passing full-journey test (14.7 seconds), temporarily
+hiding sticky navigation during the element screenshot. Optional audio fallback was exercised; subjective sound quality and physical print pagination are not certified.
+
+The public GitHub repository was verified at https://github.com/joyboyreturns/GhostShift on
+November 3, 2026; prior statements about no public repository describe earlier verification points.
+These incident changes are still local and uncommitted at this verification. Official submission
+requirements were rechecked for preparation in submission-draft.md. Hosting, target-server Docker/TLS,
+video publication and final submission remain pending. No judge-facing app URL is claimed.
+
+## Release completion follow-up — November 3, 2026
+
+`make lint`, `make typecheck` and `make test` passed again with the final incident experience
+(154 backend and 15 frontend tests). The new `scripts/verify-containers.py` also passes Ruff and
+format checks. The media recorder passes `node --check` and completed its real browser journey.
+
+`python3 scripts/verify-containers.py --context colima-ghostshift-validation` built the real API/web
+images in a dedicated Linux/arm64 Docker VM and passed the Caddy browser/isolation workflow, restart
+persistence, expiry rejection and maintenance deletion. It used a random Compose project, clean
+fixture-only template and loopback HTTP with test-only cookie/TTL/rate settings. Production defaults
+were not changed. All of its disposable containers and volumes were removed. Actual report and
+image identifiers are preserved in evidence/container-validation.json. CI now repeats container
+verification on its own runner. This does not verify target-server DNS/TLS or publish an app URL.
+
+The local MP4 has H.264 video, AAC stereo audio and optional English captions, exactly 170 seconds at
+1440×1000. A contact sheet and a Kiro-attribution frame were inspected, and recorded comparison data
+was checked against the real original/alternate results and unchanged parent. Narration is disclosed
+system TTS. No uploaded video, final submission or personal eligibility attestation is fabricated.

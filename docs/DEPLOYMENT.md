@@ -1,17 +1,18 @@
 # Deployment handoff
 
 The production configuration is ready for server verification. **No public deployment has happened.**
-The native production frontend/Caddy/API journey passes locally. Docker configuration validates, but
-images/container runtime and real HTTPS still need verification on the target server.
+The native production frontend/Caddy/API journey passes locally. Production images now build and pass the actual container browser journey on local Linux/arm64
+Docker, including restart persistence and expiry cleanup. Real target-server deployment and HTTPS
+still need verification. See RELEASE_READINESS.md and evidence/container-validation.json.
 
 ## Information needed for actual hosting
 
 Provide an Ubuntu SSH host alias/account and the intended demo hostname. Configure SSH access using
 your usual key setup; private keys should not be pasted into chat or committed. The hostname needs
 an A record pointing at the server. The supplied configuration expects ports 80/443 available and
-one API instance behind Caddy. This repository still has no public remote or authored Git commits;
-existing local tree checkpoints are not commits. Repository publication also needs the intended
-GitHub owner/repository and author identity.
+one API instance behind Caddy. The public repository is https://github.com/joyboyreturns/GhostShift
+(verified publicly readable November 3, 2026). Publish reviewed changes separately; repository
+visibility does not establish application hosting.
 
 Nothing is needed to keep using the local preview at http://localhost:5173.
 
@@ -94,5 +95,33 @@ make e2e-public
 This builds the actual frontend, prepares a fresh fixture-only database, launches an isolated API
 and the same Caddyfile on loopback ports 8091/4174, tests two browser contexts and the proposal/report
 workflow, then removes the marked temporary test data. It uses an explicit loopback-only insecure
-cookie setting and does not verify public TLS. `make e2e` separately runs the 11 development-path
-browser tests. GitHub CI is configured to run both paths after publication; no remote CI result is claimed.
+cookie setting and does not verify public TLS. `make e2e` separately exercises the development-path browser journeys. GitHub CI is configured
+to run both paths; see the actual workflow runs for remote results.
+
+
+## Incident-experience launch acceptance
+
+- [ ] Review and publish the current incident-experience changes to the public repository.
+- [ ] Build and run the locked images on the target host; verify Docker health and restart persistence.
+- [ ] Verify actual DNS/TLS, secure cookies, SPA deep links, isolation, quotas, retention and exports.
+- [ ] In a fresh visitor profile: Start your shift → gap → source → authored proposal → alternate
+  rehearsal → comparison → verified replay → exported JSON. Repeat at a mobile viewport.
+- [ ] Confirm custom scenarios use neutral incident copy and proposed-policy runs stay unapproved.
+- [ ] Check keyboard navigation, reduced motion and muted-by-default audio on the hosted build.
+- [ ] Record deployment acceptance evidence, commit/image identifiers and the tested hostname.
+- [ ] Only then add the judge-facing app URL to submission materials and record the public demo.
+
+The native Caddy loopback suite is local evidence. It does not satisfy these target-host checks.
+
+
+## Repeat actual container verification
+
+Run `make e2e-containers` against an already running Docker daemon. When using a named context, set
+`DOCKER_CONTEXT` (for example `DOCKER_CONTEXT=colima-ghostshift-validation make e2e-containers`).
+The script creates a random Compose project with a clean fixture template, builds the real images,
+binds Caddy only on loopback port 4180, runs the public browser test, restarts API/Caddy and checks
+persisted data, then tests a 60-second workspace expiry and maintenance cleanup. The test overrides
+HTTP/cookie/TTL/write-rate settings only in its private temporary configuration; production defaults
+are unchanged. It removes only its own disposable containers/volumes, retaining built image caches.
+Evidence is written to `artifacts/container-validation.json` and uploaded by CI. This is not a public
+URL or TLS check. Use `python3 scripts/verify-containers.py --help` for context/port/report options.

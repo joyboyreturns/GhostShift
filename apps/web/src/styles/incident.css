@@ -1,0 +1,379 @@
+/* Incident presentation uses the existing API-backed rehearsal, with no timed gates. */
+.shift-briefing,
+.incident-feed,
+.branch-map,
+.incident-debrief {
+  padding: clamp(20px, 3vw, 36px);
+  margin: 24px 0;
+  min-width: 0;
+}
+.shift-briefing {
+  border-left: 3px solid var(--violet);
+  background: linear-gradient(125deg, var(--surface-2), var(--surface));
+}
+.briefing-lede {
+  font-size: clamp(19px, 2vw, 25px);
+  line-height: 1.5;
+  color: var(--text);
+  max-width: 56ch;
+}
+.shift-briefing p {
+  margin: 16px 0;
+}
+.incident-chapter {
+  color: var(--violet);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.incident-view-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0 16px;
+}
+.incident-view-toggle button {
+  padding: 10px 18px;
+  border: 1px solid var(--violet);
+  border-radius: 8px;
+  color: var(--soft);
+  background: var(--surface);
+  cursor: pointer;
+}
+.incident-view-toggle button[aria-pressed="true"] {
+  color: var(--bg);
+  background: var(--violet);
+  font-weight: 700;
+}
+.incident-feed {
+  background: linear-gradient(125deg, var(--surface), var(--surface-2));
+  border-top: 2px solid var(--violet);
+}
+.incident-feed .eyebrow,
+.branch-map .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.incident-feed .text-action {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+.incident-feed h2,
+.branch-map h2,
+.incident-debrief h2 {
+  font-size: clamp(22px, 2.5vw, 30px);
+  margin: 8px 0;
+}
+.dispatch-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+}
+.dispatch-list li {
+  display: flex;
+  gap: 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--surface-2);
+}
+.dispatch-list strong {
+  color: var(--text);
+  font-size: 18px;
+}
+.dispatch-list p {
+  color: var(--soft);
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+.dispatch-index {
+  font:
+    14px "JetBrains Mono Variable",
+    monospace;
+  color: var(--violet);
+  min-width: 28px;
+  padding-top: 4px;
+}
+.incident-view .simulation-grid {
+  grid-template-columns: minmax(180px, 0.7fr) minmax(0, 2fr);
+}
+.incident-view .incident-history {
+  grid-column: 1 / -1;
+}
+.incident-history .timeline-list {
+  max-height: 260px;
+  overflow-y: auto;
+}
+.inspection-view .simulation-grid > div {
+  min-width: 0;
+}
+.choice-diagnostics {
+  margin: 16px 0;
+}
+.choice-diagnostics summary {
+  cursor: pointer;
+  color: var(--soft);
+  font-size: 14px;
+}
+.gap-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding: 20px 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--amber);
+}
+.modeled-assumption {
+  color: var(--amber);
+  border-left: 2px solid var(--amber);
+  padding-left: 16px;
+}
+.branch-list {
+  list-style: none;
+  padding: 0 0 0 8px;
+  margin-top: 28px;
+}
+.branch-list li {
+  border-left: 2px solid var(--violet);
+  position: relative;
+  padding: 0 16px 24px 28px;
+  margin-left: 7px;
+  overflow-wrap: anywhere;
+}
+.branch-list li:last-child {
+  padding-bottom: 0;
+}
+.branch-dot {
+  position: absolute;
+  left: -8px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  background: var(--surface);
+  border: 2px solid var(--violet);
+  border-radius: 50%;
+}
+.branch-current .branch-dot {
+  background: var(--mint);
+  border-color: var(--mint);
+}
+.branch-list .eyebrow {
+  display: block;
+  margin-bottom: 8px;
+}
+.branch-list p {
+  margin: 8px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.outcome-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.outcome-pair article {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--violet);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+.outcome-pair h4 {
+  font-size: 22px;
+  margin: 12px 0;
+}
+.outcome-pair p {
+  margin: 12px 0;
+}
+.comparison-story {
+  margin: 24px 0;
+}
+.existing-proposal-choices {
+  margin: 20px 0;
+}
+.existing-proposal-choices summary {
+  cursor: pointer;
+  color: var(--violet);
+  padding: 12px 0;
+}
+#active-decision,
+#incident-proposal,
+#incident-evidence {
+  scroll-margin-top: 24px;
+}
+.incident-debrief {
+  border-top: 2px solid var(--mint);
+}
+.incident-debrief p {
+  margin: 16px 0;
+  color: var(--soft);
+}
+@media (max-width: 700px) {
+  .incident-view .simulation-grid,
+  .outcome-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .incident-feed .panel-heading,
+  .branch-map .panel-heading {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .branch-map,
+  .incident-feed,
+  .incident-debrief {
+    padding: 20px;
+  }
+  .dispatch-list li {
+    gap: 12px;
+  }
+  .shift-briefing .badge {
+    white-space: normal;
+  }
+}
+@media print {
+  .incident-view-toggle,
+  .incident-feed .session-actions,
+  .incident-feed button,
+  .gap-actions {
+    display: none;
+  }
+  .incident-history .timeline-list {
+    max-height: none;
+    overflow: visible;
+  }
+  .outcome-pair {
+    display: block;
+  }
+  .outcome-pair article {
+    break-inside: avoid;
+    background: white;
+    color: black;
+    margin-bottom: 16px;
+  }
+}
+@media (min-width: 901px) {
+  .incident-view .command-workbench {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.65fr);
+    gap: 20px;
+    align-items: start;
+  }
+  .incident-view .simulation-grid {
+    display: contents;
+  }
+  .incident-view .incident-feed {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    margin: 0;
+    border-radius: 14px;
+    border: 1px solid var(--violet);
+  }
+  .incident-view .facts-panel {
+    grid-column: 2;
+  }
+  .incident-view .facts-panel dl {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+  }
+  .incident-view .facts-panel dl > div {
+    border-bottom: 0;
+  }
+  .incident-view .facts-note {
+    border-top: 1px solid var(--line);
+    padding: 12px 20px;
+  }
+  .incident-view .facts-note p {
+    margin: 4px 0;
+  }
+  .incident-view .decision-panel {
+    grid-column: 2;
+  }
+  .incident-view .incident-history {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+  }
+}
+.shift-briefing,
+.branch-map,
+.incident-debrief {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background-color: var(--surface);
+}
+.incident-debrief {
+  border-top: 2px solid var(--mint);
+}
+.incident-feed .panel-heading {
+  padding: 0 0 16px;
+  background: transparent;
+}
+.incident-feed .session-actions {
+  gap: 12px;
+}
+.incident-feed .dispatch-list {
+  max-height: 420px;
+  overflow-y: auto;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dispatch-list li {
+    animation: dispatch-arrival 250ms ease-out;
+  }
+  @keyframes dispatch-arrival {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+@media (max-width: 900px) {
+  .incident-view .command-workbench {
+    display: flex;
+    flex-direction: column;
+  }
+  .incident-view .simulation-grid {
+    width: 100%;
+  }
+  .incident-view .incident-feed {
+    width: 100%;
+  }
+}
+@media print {
+  .incident-view .command-workbench {
+    display: block;
+  }
+  .incident-feed .dispatch-list {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+.incident-feed .panel-heading,
+.branch-map .panel-heading {
+  height: auto;
+  min-height: 56px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0 0 16px;
+  background: transparent;
+}
+.incident-feed .panel-heading h2,
+.branch-map .panel-heading h2 {
+  line-height: 1.2;
+  margin: 8px 0;
+}
+@media (max-width: 700px) {
+  .incident-feed,
+  .branch-map {
+    border-radius: 12px;
+  }
+  .branch-map .panel-heading {
+    flex-direction: column;
+  }
+}

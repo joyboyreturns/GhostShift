@@ -50,7 +50,7 @@ export function Guide() {
       </p>
       <div className="session-actions">
         <Button asChild>
-          <Link to="/studio?demo=night-market">
+          <Link to="/simulation?scenario=night-market">
             Explore the Night Market demo
           </Link>
         </Button>
@@ -66,6 +66,26 @@ export function Guide() {
           </li>
         ))}
       </ol>
+      <section id="built-with-kiro" className="panel report-section">
+        <span className="eyebrow">Build notes / Honest attribution</span>
+        <h2>Built around a Kiro-authored engine.</h2>
+        <p>
+          Kiro authored the initial simulation specifications, deterministic
+          engine and 60 tests. Codex separately reviewed and corrected the
+          engine, then built persistence, policy review and this incident
+          experience around it. The running app needs no AI key.
+        </p>
+        <p>
+          <a href="https://github.com/joyboyreturns/GhostShift/blob/main/docs/kiro-evidence.md">
+            Read the genuine Kiro contribution record ↗
+          </a>
+        </p>
+        <p>
+          <a href="https://github.com/joyboyreturns/GhostShift/tree/main/.kiro/specs/simulation-engine">
+            Inspect the engine specifications ↗
+          </a>
+        </p>
+      </section>
       <p className="muted">
         Keep live response decisions with qualified people. Source review and
         experiment completion are separate from operational authority.

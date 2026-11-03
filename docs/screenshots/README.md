@@ -17,3 +17,18 @@ runs. No original uploaded PDF binary is included.
 - [Library](library.png): saved rehearsals in a clean workspace.
 
 The browser tests (`make e2e`) also write screenshots under `apps/web/test-results`.
+
+
+## Incident experience captures — November 3, 2026
+
+The latest real Playwright/Chromium runs refreshed home.png and simulation-room.png, and added:
+
+- [Shift briefing](incident-briefing.png): exact-version Night Market role, fictional scene-setting and real starting facts.
+- [Incident view on mobile](incident-mobile.png): Support overlap, source evidence and branch relationships at 390 px with reduced motion.
+- [Proposed-policy comparison](incident-comparison.png): actual original uncovered path and the unapproved alternate, including the first differing choice and both source-backed reports.
+
+These use the real local API with the isolated database `/private/tmp/ghostshift-incident-e2e.db`.
+The other images above document earlier workflows; simulation-mobile.png is the earlier Night Market
+capture. The new incident-mobile.png shows the current mobile presentation. All data is fictional.
+The new comparison image captures the report element with sticky navigation and the skip link hidden during capture to prevent browser chrome obscuring report text. No hosted
+application, public TLS, physical print or uploaded-video acceptance is implied.

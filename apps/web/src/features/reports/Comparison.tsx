@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { simulationApi } from "../../lib/api";
+import { ComparisonStory } from "./ComparisonStory";
 import { statusLabels } from "../simulation/presentation";
 
 export function Comparison({
@@ -44,6 +45,7 @@ export function Comparison({
           Open printable comparison & export ↗
         </Link>
       </p>
+      <ComparisonStory left={left} right={right} />
       <div className="table-scroll">
         <table>
           <thead>
