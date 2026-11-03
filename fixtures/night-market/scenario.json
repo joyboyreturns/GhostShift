@@ -1,0 +1,19 @@
+{
+  "title": "The Rainy Evening",
+  "fictional": true,
+  "status": "fixture_only",
+  "initial_facts": {
+    "vendor_delay_minutes": 45,
+    "rain_risk": 40,
+    "indoor_spaces": 0
+  },
+  "injects": [
+    {
+      "before_node_id": "weather",
+      "facts": {
+        "rain_risk": 85
+      }
+    }
+  ],
+  "seed": 2026
+}

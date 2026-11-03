@@ -1,0 +1,62 @@
+/*
+ * GhostShift design tokens — "haunted command center" (Kiroween 2026).
+ * Semantic roles are fixed: mint = validated evidence, amber = review/warning,
+ * coral = deviation, violet = brand/interaction. Contrast pairs are checked
+ * against --bg and --surface (see docs/DESIGN.md).
+ */
+:root {
+  /* Night layers */
+  --bg: #0a0714;
+  --surface-0: #0f0b1d;
+  --surface: #161128;
+  --surface-2: #211a3a;
+  --glass: color-mix(in srgb, #1b1533 72%, transparent);
+  --glass-strong: color-mix(in srgb, #1d1737 88%, transparent);
+
+  /* Lines */
+  --line: rgb(167 139 250 / 0.13);
+  --line-strong: rgb(167 139 250 / 0.24);
+  --line-bright: rgb(167 139 250 / 0.4);
+
+  /* Text */
+  --text: #f3f0fa;
+  --soft: #cdc6e0;
+  --muted: #aaa2c2;
+  --faint: #918aab;
+
+  /* Spirits */
+  --violet: #a78bfa;
+  --violet-soft: #c9b8ff;
+  --violet-deep: #6d4fd8;
+  --mint: #7cf5c6;
+  --mint-soft: #c2fbe5;
+  --amber: #ffb45c;
+  --amber-soft: #ffd29e;
+  --coral: #ff6b7a;
+  --coral-soft: #ffa3ad;
+
+  /* Glows */
+  --glow-violet:
+    0 0 0 1px rgb(167 139 250 / 0.35), 0 10px 40px -10px rgb(124 92 246 / 0.55);
+  --glow-mint:
+    0 0 0 1px rgb(124 245 198 / 0.45), 0 0 28px -4px rgb(124 245 198 / 0.45);
+  --glow-amber:
+    0 0 0 1px rgb(255 180 92 / 0.4), 0 0 30px -8px rgb(255 180 92 / 0.45);
+  --glow-coral:
+    0 0 0 1px rgb(255 107 122 / 0.4), 0 0 30px -8px rgb(255 107 122 / 0.45);
+  --shadow-card:
+    0 1px 0 rgb(255 255 255 / 0.05) inset, 0 24px 60px -30px rgb(0 0 0 / 0.85);
+
+  /* Type */
+  --font-sans:
+    "Space Grotesk Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-mono:
+    "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Shape and motion */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}

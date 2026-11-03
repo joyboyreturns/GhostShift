@@ -1,0 +1,98 @@
+# Deployment handoff
+
+The production configuration is ready for server verification. **No public deployment has happened.**
+The native production frontend/Caddy/API journey passes locally. Docker configuration validates, but
+images/container runtime and real HTTPS still need verification on the target server.
+
+## Information needed for actual hosting
+
+Provide an Ubuntu SSH host alias/account and the intended demo hostname. Configure SSH access using
+your usual key setup; private keys should not be pasted into chat or committed. The hostname needs
+an A record pointing at the server. The supplied configuration expects ports 80/443 available and
+one API instance behind Caddy. This repository still has no public remote or authored Git commits;
+existing local tree checkpoints are not commits. Repository publication also needs the intended
+GitHub owner/repository and author identity.
+
+Nothing is needed to keep using the local preview at http://localhost:5173.
+
+## Server commands once the target is available
+
+From the checked-out project root on an Ubuntu host with Docker Engine and Compose:
+
+```sh
+cp deploy/.env.public.example deploy/.env.public
+chmod 600 deploy/.env.public
+python3 -c 'import secrets; print(secrets.token_urlsafe(48))'
+```
+
+Put the intended hostname and generated secret into deploy/.env.public. It is ignored by Git and the
+Docker build context. Keep the secret stable across restarts; rotating it invalidates existing demo
+cookies. Never set PUBLIC_TEMPLATE_PATH to a local/private development database.
+
+```sh
+docker compose --env-file deploy/.env.public -f deploy/compose.public.yml config --quiet
+docker compose --env-file deploy/.env.public -f deploy/compose.public.yml build api web
+# First deployment only: explicit migrations/seeding into a new clean fixture template.
+docker compose --env-file deploy/.env.public -f deploy/compose.public.yml run --rm prepare
+docker compose --env-file deploy/.env.public -f deploy/compose.public.yml up -d
+docker compose --env-file deploy/.env.public -f deploy/compose.public.yml ps
+```
+
+The API image installs locked runtime dependencies, runs as uid 10001 with a read-only root filesystem,
+and stores only dedicated public data in /data. The one-off prepare service explicitly migrates and
+seeds a new fixture template before the API starts. API startup never creates tables or runs migrations;
+missing/outdated templates fail closed. Do not repeat prepare on routine restarts: existing templates
+are validated and the preparation command refuses to overwrite them.
+Caddy serves only the built frontend. Only web publishes ports; the API has no host port. The API's
+forwarded-header trust is appropriate only while it remains reachable through this private proxy
+network. The configuration has no automated publishing/deployment action.
+
+Caddy handles HTTPS for the configured domain. DNS, certificate issuance, firewall and the resulting
+browser security/cookie behavior must be checked on the real host. Do not claim those passed from
+local HTTP tests. If this Ubuntu server already has a proxy or services on these ports, integrate
+with that topology and reverify client-IP handling rather than launching competing listeners.
+
+## Acceptance checks on the deployed host
+
+Verify /api/health returns ok; normal navigation and a deep simulation/report URL load the SPA;
+HTTPS cookies are Secure/HttpOnly/SameSite=Strict; two independent browser profiles cannot share
+source/session/report data; the complete gap → proposal → unapproved replay/comparison → JSON report
+journey passes; and configured error/rate/retention controls remain effective. Observe a 24-hour
+expiry/cleanup cycle or test a shorter allowed TTL in a staging deployment. Confirm volume ownership,
+container health, restart persistence, memory/disk bounds and real TLS before supplying a judge URL.
+Use fictional documents in the public demo and retain its expiry/export notice.
+
+## Maintenance and upgrades
+
+The API prunes expired scopes at startup and every five minutes. Health becomes unavailable if
+maintenance fails. Inspect infrastructure logs without enabling raw document/request-body logging.
+A manual sweep is available using the same service environment:
+
+```sh
+docker compose --env-file deploy/.env.public -f deploy/compose.public.yml exec api .venv/bin/python -m app.services.demo_admin cleanup
+```
+
+Keep public data on local persistent storage supporting SQLite WAL and POSIX file locks. Do not use
+an unsupported shared/network filesystem or add API replicas: the process lease deliberately rejects
+a second instance. Storage limits bound main database pages; leave room for WAL/SHM, images and logs.
+
+For a schema change, prepare a new template filename (for example template-0004.db after such a
+migration exists) and deploy it explicitly. Existing incompatible demo scopes fail closed and remain
+preserved until expiry; users start fresh. No request migrates old data. Backups of the **local**
+development database can use the snapshot command in PUBLIC_DEMO.md; public temporary workspaces
+are intentionally ephemeral. Copying the entire public volume into long-lived backups would defeat
+the stated retention unless backup expiry is configured as well.
+
+## Reproduce local production-path verification
+
+Prerequisites: the normal Python/Node setup plus Caddy 2.11.7 (`brew install caddy` on macOS).
+
+```sh
+make e2e-public
+```
+
+This builds the actual frontend, prepares a fresh fixture-only database, launches an isolated API
+and the same Caddyfile on loopback ports 8091/4174, tests two browser contexts and the proposal/report
+workflow, then removes the marked temporary test data. It uses an explicit loopback-only insecure
+cookie setting and does not verify public TLS. `make e2e` separately runs the 11 development-path
+browser tests. GitHub CI is configured to run both paths after publication; no remote CI result is claimed.

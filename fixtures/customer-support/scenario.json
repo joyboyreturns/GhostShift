@@ -1,0 +1,11 @@
+{
+  "title": "The Promotional Refund",
+  "fictional": true,
+  "status": "fixture_only",
+  "initial_facts": {
+    "days_since_purchase": 12,
+    "promotional_purchase": true
+  },
+  "injects": [],
+  "seed": 2026
+}

@@ -1,0 +1,59 @@
+# Single API process: rate limits are in memory. Only Caddy publishes network ports.
+services:
+  api:
+    image: ghostshift-api:local
+    build:
+      context: ..
+      dockerfile: deploy/api.Dockerfile
+    environment:
+      PUBLIC_DEMO: "true"
+      PUBLIC_DEMO_SECRET: ${PUBLIC_DEMO_SECRET:?Generate a persistent random public demo secret}
+      PUBLIC_ORIGIN: https://${DEMO_DOMAIN:?Set the demo hostname}
+      PUBLIC_TEMPLATE_PATH: /data/template-0003.db
+      PUBLIC_WORKSPACE_ROOT: /data/workspaces
+      PUBLIC_TTL_SECONDS: ${PUBLIC_TTL_SECONDS:-86400}
+      PUBLIC_MAX_WORKSPACES: ${PUBLIC_MAX_WORKSPACES:-200}
+      WEB_CONCURRENCY: "1"
+    volumes: ["demo-data:/data"]
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    pids_limit: 100
+    mem_limit: 512m
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, .venv/bin/python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+  prepare:
+    image: ghostshift-api:local
+    profiles: [maintenance]
+    environment:
+      PUBLIC_TEMPLATE_PATH: /data/template-0003.db
+    volumes: ["demo-data:/data"]
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    command: [.venv/bin/python, -m, app.services.demo_admin, prepare]
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/web.Dockerfile
+    environment:
+      GHOSTSHIFT_SITE: ${DEMO_DOMAIN:?Set the demo hostname}
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes: ["caddy-data:/data", "caddy-config:/config"]
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 100
+    mem_limit: 256m
+volumes:
+  demo-data:
+  caddy-data:
+  caddy-config:

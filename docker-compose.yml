@@ -1,0 +1,20 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    ports: ["127.0.0.1:8000:8000"]
+    environment:
+      DATABASE_URL: sqlite:////data/ghostshift.db
+      CORS_ORIGINS: http://localhost:5173
+    volumes: ["ghostshift-data:/data"]
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports: ["127.0.0.1:5173:5173"]
+    environment:
+      API_PROXY_TARGET: http://api:8000
+    depends_on: [api]
+volumes:
+  ghostshift-data:

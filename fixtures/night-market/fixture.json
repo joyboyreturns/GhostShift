@@ -1,0 +1,115 @@
+{
+  "title": "Night Market Operations",
+  "description": "A late vendor. Rising rain risk. No indoor capacity.",
+  "fictional": true,
+  "graph": {
+    "nodes": [
+      {
+        "id": "start",
+        "label": "Evening operations",
+        "type": "start",
+        "source_refs": [
+          2
+        ],
+        "next_node": "delivery"
+      },
+      {
+        "id": "delivery",
+        "label": "Is the vendor late?",
+        "type": "decision",
+        "source_refs": [
+          3
+        ],
+        "choices": [
+          {
+            "id": "escalate",
+            "label": "Escalate to operations lead",
+            "destination": "weather",
+            "conditions": [
+              {
+                "field": "vendor_delay_minutes",
+                "operator": "gte",
+                "value": 30
+              }
+            ],
+            "source_refs": [
+              3
+            ],
+            "evidence_status": "cited"
+          },
+          {
+            "id": "routine",
+            "label": "Continue routine intake",
+            "destination": "weather",
+            "conditions": [
+              {
+                "field": "vendor_delay_minutes",
+                "operator": "lt",
+                "value": 30
+              }
+            ],
+            "source_refs": [
+              3
+            ],
+            "evidence_status": "cited"
+          }
+        ]
+      },
+      {
+        "id": "weather",
+        "label": "Can we move indoors?",
+        "type": "decision",
+        "source_refs": [
+          4
+        ],
+        "choices": [
+          {
+            "id": "indoor",
+            "label": "Redirect vendors indoors",
+            "destination": "end",
+            "conditions": [
+              {
+                "field": "rain_risk",
+                "operator": "gt",
+                "value": 70
+              },
+              {
+                "field": "indoor_spaces",
+                "operator": "gt",
+                "value": 0
+              }
+            ],
+            "source_refs": [
+              4
+            ],
+            "evidence_status": "cited"
+          },
+          {
+            "id": "outdoor",
+            "label": "Continue outdoor setup",
+            "destination": "end",
+            "conditions": [
+              {
+                "field": "rain_risk",
+                "operator": "lte",
+                "value": 70
+              }
+            ],
+            "source_refs": [
+              4
+            ],
+            "evidence_status": "cited"
+          }
+        ]
+      },
+      {
+        "id": "end",
+        "label": "Review venue authority",
+        "type": "end",
+        "source_refs": [
+          5
+        ]
+      }
+    ]
+  }
+}

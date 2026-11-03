@@ -1,0 +1,27 @@
+{
+  "started_at": "2026-11-02T20:41:12.370090+00:00",
+  "tool": "kiro-cli 2.37.1",
+  "prompt_file": "docs/KIRO_MILESTONE_2_PROMPT.md",
+  "baseline_ref": "refs/ghostshift/baselines/m2-handoff",
+  "log_file": ".kiro/evidence/2026-11-03-engine-session.log",
+  "status": "exited",
+  "launcher": "Codex; product implementation requested from Kiro",
+  "ended_at": "2026-11-02T20:47:40.807335+00:00",
+  "exit_code": 1,
+  "session_id": "8b21a265-5723-4164-92b7-d17d990e23bc",
+  "outcome": "partial implementation; service throttled before final verification",
+  "implementation_sessions": 1,
+  "additional_sessions_after_credit_conservation_request": 0,
+  "credit_usage": "not measured",
+  "local_review": {
+    "author": "Codex",
+    "kiro_model_calls_after_credit_request": 0,
+    "backend_tests_passed": 100,
+    "frontend_unit_tests_passed": 3,
+    "browser_tests_passed": 4,
+    "lint": "passed",
+    "typecheck": "passed",
+    "frontend_build": "passed",
+    "details": "docs/ENGINE_REVIEW.md"
+  }
+}

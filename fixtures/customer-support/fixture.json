@@ -1,0 +1,69 @@
+{
+  "title": "Customer Support Refunds",
+  "description": "A standard refund collides with the promotional exclusion.",
+  "fictional": true,
+  "graph": {
+    "nodes": [
+      {
+        "id": "start",
+        "label": "Refund request received",
+        "type": "start",
+        "source_refs": [
+          2
+        ],
+        "next_node": "refund"
+      },
+      {
+        "id": "refund",
+        "label": "Which refund rule applies?",
+        "type": "decision",
+        "source_refs": [
+          3,
+          4
+        ],
+        "choices": [
+          {
+            "id": "standard",
+            "label": "Issue standard refund",
+            "destination": "end",
+            "conditions": [
+              {
+                "field": "days_since_purchase",
+                "operator": "lte",
+                "value": 30
+              }
+            ],
+            "source_refs": [
+              3
+            ],
+            "evidence_status": "cited"
+          },
+          {
+            "id": "promo",
+            "label": "Decline promotional refund",
+            "destination": "end",
+            "conditions": [
+              {
+                "field": "promotional_purchase",
+                "operator": "eq",
+                "value": true
+              }
+            ],
+            "source_refs": [
+              4
+            ],
+            "evidence_status": "cited"
+          }
+        ]
+      },
+      {
+        "id": "end",
+        "label": "Record the outcome",
+        "type": "end",
+        "source_refs": [
+          5
+        ]
+      }
+    ]
+  }
+}

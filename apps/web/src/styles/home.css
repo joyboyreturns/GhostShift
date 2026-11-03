@@ -1,0 +1,254 @@
+/* Landing page */
+.home {
+  max-width: 1240px;
+  padding: 64px 40px 40px;
+}
+.home-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: 40px;
+  min-height: min(680px, calc(100vh - 140px));
+}
+.home h1 {
+  font-size: clamp(44px, 5.3vw, 78px);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  margin: 22px 0 26px;
+}
+.home h1 em {
+  font-style: normal;
+  background: linear-gradient(100deg, var(--violet-soft) 0%, var(--mint) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 26px rgb(124 245 198 / 0.35));
+}
+.home-lede {
+  max-width: 540px;
+  color: var(--soft);
+  font-size: 17px;
+  line-height: 1.75;
+  margin: 0;
+}
+.hero-actions {
+  flex-wrap: wrap;
+  margin-top: 34px;
+}
+.home .home-foot {
+  font: 11px var(--font-mono);
+  color: var(--faint);
+  letter-spacing: 0.04em;
+  margin-top: 28px;
+}
+
+/* Illustration */
+.haunted-graph {
+  position: relative;
+  aspect-ratio: 460 / 420;
+  width: 100%;
+  max-width: 560px;
+  justify-self: end;
+}
+.haunted-graph svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.hg-moon {
+  position: absolute;
+  inset: 6% 4% auto auto;
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 38% 35%,
+    rgb(243 240 250 / 0.22),
+    rgb(167 139 250 / 0.12) 45%,
+    transparent 70%
+  );
+  filter: blur(4px);
+}
+.hg-page {
+  filter: drop-shadow(0 24px 40px rgb(0 0 0 / 0.6));
+}
+.hg-line {
+  animation: twinkle 2.8s ease-in-out infinite alternate;
+}
+.hg-edges path {
+  stroke-dasharray: 8 8;
+  animation: edge-flow 1.8s linear infinite;
+}
+.hg-ghost {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ghost-bob 3.2s ease-in-out infinite;
+  filter: drop-shadow(0 0 18px rgb(201 184 255 / 0.7));
+}
+
+/* Pillars */
+.home-pillars {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 30px;
+}
+.pillar {
+  --tone: var(--violet);
+  position: relative;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(
+      260px 160px at 0% 0%,
+      color-mix(in srgb, var(--tone) 14%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(180deg, rgb(36 27 66 / 0.5), rgb(20 15 38 / 0.5));
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(14px);
+  transition:
+    transform 0.25s var(--ease),
+    border-color 0.25s;
+}
+.pillar:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--tone) 45%, transparent);
+}
+.pillar-mint {
+  --tone: var(--mint);
+}
+.pillar-amber {
+  --tone: var(--amber);
+}
+.pillar-index {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  font: 11px var(--font-mono);
+  color: var(--faint);
+}
+.pillar-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tone) 35%, transparent);
+  box-shadow: 0 0 24px -8px var(--tone);
+}
+.pillar h2 {
+  font-size: 19px;
+  margin: 22px 0 10px;
+}
+.pillar p {
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Ritual strip */
+.home-ritual {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  align-items: center;
+  gap: 18px 40px;
+  margin-top: 70px;
+  padding: 34px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-strong);
+  background:
+    linear-gradient(100deg, rgb(109 79 216 / 0.2), rgb(124 245 198 / 0.06)),
+    rgb(14 10 28 / 0.6);
+}
+.home-ritual h2 {
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  margin: 12px 0 0;
+}
+.home-ritual ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  counter-reset: ritual;
+}
+.home-ritual li {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: rgb(10 7 20 / 0.45);
+  border: 1px solid var(--line);
+}
+.home-ritual li svg {
+  color: var(--mint);
+  margin-bottom: 6px;
+}
+.home-ritual li strong {
+  font-size: 14px;
+}
+.home-ritual li span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.ritual-link {
+  grid-column: 2;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--mint);
+  font-weight: 500;
+}
+.home .home-disclaimer {
+  margin: 40px auto 0;
+  text-align: center;
+  color: var(--faint);
+  font: 11px var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 960px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .haunted-graph {
+    justify-self: center;
+    max-width: 440px;
+  }
+  .home-pillars {
+    grid-template-columns: 1fr;
+  }
+  .home-ritual {
+    grid-template-columns: 1fr;
+  }
+  .home-ritual ol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ritual-link {
+    grid-column: 1;
+    justify-self: start;
+  }
+}
+@media (max-width: 520px) {
+  .home {
+    padding: 40px 18px 24px;
+  }
+  .home h1 {
+    letter-spacing: -0.04em;
+  }
+  .home-ritual {
+    padding: 22px;
+  }
+}
