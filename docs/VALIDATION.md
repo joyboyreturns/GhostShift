@@ -236,3 +236,24 @@ The local MP4 has H.264 video, AAC stereo audio and optional English captions, e
 1440×1000. A contact sheet and a Kiro-attribution frame were inspected, and recorded comparison data
 was checked against the real original/alternate results and unchanged parent. Narration is disclosed
 system TTS. No uploaded video, final submission or personal eligibility attestation is fabricated.
+
+
+The incident experience and release tooling were committed and pushed to `main` as `9db8ab6`.
+The user explicitly deferred public hosting until after November 5, 2026 and requested a local
+narrated recording for later upload. That local deliverable is prepared; no hosted URL or public
+video is claimed. The dedicated Docker verification VM was stopped after container cleanup.
+The MP4 was fully decoded without errors and its submission-artifact checksums matched.
+
+
+### Published release verification
+
+Commit `9db8ab63b3b888b28ef5cb4a5e73890dba9a38f7` passed the full GitHub Actions pipeline:
+https://github.com/joyboyreturns/GhostShift/actions/runs/41629026438
+
+The runner passed locked installs, lint/types/tests, 19 development browser tests, the native Caddy
+public-workspace browser workflow, the production Docker workflow, npm runtime dependency audit
+and pip-audit. The downloaded artifact confirms actual Linux/amd64 container builds, restart
+persistence, expiry rejection and cleanup; its JSON is preserved in evidence/container-ci-validation.json.
+A non-blocking annotation notes the pinned upload-artifact action’s Node 20 deprecation; the runner
+executed it under Node 24 and artifact upload succeeded. No Kiro session or public app deployment
+was performed. The follow-up commit contains only release documentation/evidence and hosting timing.

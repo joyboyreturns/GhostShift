@@ -71,7 +71,7 @@ repository with license and root `.kiro`, and a public YouTube video under three
 deadline is December 4, 2026, 2 PM Pacific. Recheck all rules and entrant eligibility before submitting.
 
 The [GitHub repository](https://github.com/joyboyreturns/GhostShift) was publicly readable on November 3.
-These working-tree changes still require review, commit and publication. Hosting requires the
+The incident experience and release tooling are published in commit `9db8ab6`. Hosting is deferred until after November 5, 2026 and requires the
 acceptance checks in DEPLOYMENT.md. Record the demo using demo-script.md, verify the real URLs, and
 complete the entrant-only eligibility and final submission steps. Optional blog/social prizes need
 separate qualifying published material; no such material is claimed here.

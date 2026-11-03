@@ -1,0 +1,53 @@
+{
+  "origin": "http://127.0.0.1:4180",
+  "project": "ghostshift-verify-51c7d53a",
+  "checks": [
+    "production images start with clean explicitly prepared data",
+    "production-image browser journey and visitor isolation",
+    "new temporary workspace created",
+    "fictional write persists",
+    "real session created",
+    "document survives API and Caddy restart",
+    "session survives restart unchanged",
+    "expired workspace token rejected",
+    "expired workspace database removed by maintenance"
+  ],
+  "public_tls_verified": false,
+  "docker_version": "28.0.4",
+  "containers": [
+    {
+      "Service": "api",
+      "Image": "ghostshift-api:local",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "web",
+      "Image": "ghostshift-web:validation",
+      "State": "running",
+      "Health": ""
+    }
+  ],
+  "images": [
+    {
+      "ID": "sha256:9cc1c5fc7b75cce45e86ee424e0f4034d33dff016459c6b830897889b73401ab",
+      "ContainerName": "ghostshift-verify-51c7d53a-api-1",
+      "Repository": "ghostshift-api",
+      "Tag": "local",
+      "Platform": "linux/amd64",
+      "Size": 237564336,
+      "LastTagTime": "2026-11-03T11:40:39.291494201Z"
+    },
+    {
+      "ID": "sha256:5fa35761e434a689e257e45ce70c2cea6e736319671561c523ce357273c7c7b8",
+      "ContainerName": "ghostshift-verify-51c7d53a-web-1",
+      "Repository": "ghostshift-web",
+      "Tag": "validation",
+      "Platform": "linux/amd64",
+      "Size": 67293520,
+      "LastTagTime": "2026-11-03T11:41:27.007635784Z"
+    }
+  ],
+  "result": "passed",
+  "checked_at_utc": "2026-11-03T11:43:15Z"
+}

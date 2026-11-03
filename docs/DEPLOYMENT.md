@@ -1,11 +1,14 @@
 # Deployment handoff
 
 The production configuration is ready for server verification. **No public deployment has happened.**
-The native production frontend/Caddy/API journey passes locally. Production images now build and pass the actual container browser journey on local Linux/arm64
+The native production frontend/Caddy/API journey passes locally and in GitHub CI. Production images now build and pass the actual container browser journey on local Linux/arm64
 Docker, including restart persistence and expiry cleanup. Real target-server deployment and HTTPS
-still need verification. See RELEASE_READINESS.md and evidence/container-validation.json.
+still need verification. Linux/amd64 Docker verification also passes in GitHub CI. See RELEASE_READINESS.md and the
+container evidence under docs/evidence/.
 
-## Information needed for actual hosting
+Public hosting is deferred until after November 5, 2026 at the user’s request.
+
+## Information needed when hosting resumes
 
 Provide an Ubuntu SSH host alias/account and the intended demo hostname. Configure SSH access using
 your usual key setup; private keys should not be pasted into chat or committed. The hostname needs
@@ -101,7 +104,7 @@ to run both paths; see the actual workflow runs for remote results.
 
 ## Incident-experience launch acceptance
 
-- [ ] Review and publish the current incident-experience changes to the public repository.
+- [x] Publish incident-experience changes and release tooling (`9db8ab6`).
 - [ ] Build and run the locked images on the target host; verify Docker health and restart persistence.
 - [ ] Verify actual DNS/TLS, secure cookies, SPA deep links, isolation, quotas, retention and exports.
 - [ ] In a fresh visitor profile: Start your shift → gap → source → authored proposal → alternate

@@ -13,7 +13,8 @@ See docs/PUBLIC_DEMO.md and docs/DEPLOYMENT.md. Local Docker runtime, restart pe
 cleanup are now verified; target-server deployment/TLS verification remains. See docs/RELEASE_READINESS.md.
 Milestone 6 adds library/search, custom scenarios, version history, Replay Lab, action-step editing,
 PDF text/page provenance, onboarding and portable comparison reports. See docs/PRODUCT_COMPLETION.md.
-Deployment was explicitly excluded from this pass. No new engine or Kiro session changes.
+Public hosting is deferred until after November 5, 2026 at the user’s request. Local release
+verification and a local narrated recording are complete. No new engine or Kiro session changes.
 Conserve the user's limited Kiro credits: do not launch another Kiro model session unless the user
 explicitly requests one. Reuse the existing artifacts; Codex may review and integrate them locally.
 
