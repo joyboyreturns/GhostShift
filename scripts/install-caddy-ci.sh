@@ -22,7 +22,7 @@ from pathlib import Path
 folder, filename = Path(sys.argv[1]), sys.argv[2]
 checksums = dict((line.split()[1].lstrip('*'), line.split()[0])
                  for line in (folder / 'checksums.txt').read_text().splitlines() if line.strip())
-if hashlib.sha256((folder / filename).read_bytes()).hexdigest() != checksums.get(filename):
+if hashlib.sha512((folder / filename).read_bytes()).hexdigest() != checksums.get(filename):
     raise SystemExit('Caddy archive checksum verification failed')
 PY
 mkdir -p "$caddy_destination"
