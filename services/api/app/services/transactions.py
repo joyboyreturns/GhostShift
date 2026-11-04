@@ -14,6 +14,9 @@ from sqlalchemy import event
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
+# Total backoff is about 1.3s: enough for a slow writer to commit before a stale snapshot is retried.
+MAX_ATTEMPTS = 8
+
 
 def sqlite_write[**P, T](operation: Callable[P, T]) -> Callable[P, T]:
     @wraps(operation)
@@ -29,17 +32,17 @@ def sqlite_write[**P, T](operation: Callable[P, T]) -> Callable[P, T]:
 
         event.listen(db, "after_commit", mark_committed)
         try:
-            for attempt in range(4):
+            for attempt in range(MAX_ATTEMPTS):
                 try:
                     return operation(*args, **kwargs)
                 except OperationalError as exc:
                     db.rollback()
                     if (
                         not committed
-                        and attempt < 3
+                        and attempt < MAX_ATTEMPTS - 1
                         and getattr(exc.orig, "sqlite_errorcode", 0) & 0xFF == SQLITE_BUSY
                     ):
-                        sleep(0.02 * 2**attempt)
+                        sleep(min(0.02 * 2**attempt, 0.25))
                         continue
                     if (
                         not committed
