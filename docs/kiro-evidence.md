@@ -104,3 +104,11 @@ provenance (migration 0004), explicit UTC transport metadata, onboarding and reg
 Portable reports include actual cited text, pinned replay inputs, durable events and captured review
 provenance. Existing engine code and original Kiro artifacts are unchanged. No further Kiro model
 sessions were launched. Deployment was explicitly excluded. See PRODUCT_COMPLETION.md and VALIDATION.md.
+
+## Addendum 2026-11-05: Claude Code work (not Kiro usage)
+
+Claude Code (not Kiro) added `scripts/ghostshift_mcp.py`, a standard-library stdio MCP server that wraps
+existing `/api` routes, with unit tests in `services/api/tests/unit/test_mcp_server.py`, and
+`.kiro/settings/mcp.json` registering it for Kiro. This is hand-written integration code. It becomes
+Kiro usage evidence only when a Kiro session actually calls it; such a session must be logged below with
+its date, prompt, tool calls and result. No such Kiro session has happened yet.

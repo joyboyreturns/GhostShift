@@ -15,8 +15,11 @@ Milestone 6 adds library/search, custom scenarios, version history, Replay Lab, 
 PDF text/page provenance, onboarding and portable comparison reports. See docs/PRODUCT_COMPLETION.md.
 Public hosting is deferred until after November 5, 2026 at the user’s request. Local release
 verification and a local narrated recording are complete. No new engine or Kiro session changes.
-Conserve the user's limited Kiro credits: do not launch another Kiro model session unless the user
-explicitly requests one. Reuse the existing artifacts; Codex may review and integrate them locally.
+Kiro credits: on 2026-11-05 the user authorized real Kiro work for Kiroween (Kiro-authored source-studio and
+replay-lab specs, tested hooks, MCP use, custom agents). Still do not launch a Kiro model session
+without the user running or approving it each time; request the free hackathon credits first.
+Record every session in docs/kiro-evidence.md with exact attribution (Kiro vs Codex vs Claude Code).
+Never present hand-written config as Kiro usage, and never claim a hook ran unless it did in Kiro.
 
 - React/TypeScript/Vite frontend in apps/web; FastAPI/Pydantic v2/SQLAlchemy backend in services/api.
 - API prefix /api. Routes orchestrate services; presentation components do not interpret policy.

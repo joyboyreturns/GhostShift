@@ -38,3 +38,10 @@ PRODUCT_COMPLETION.md. A presentation-only visual overhaul followed (DESIGN.md).
 The Kiro contribution record is unchanged: there is still exactly one Kiro session. No new Kiro
 work is planned unless the user explicitly requests it. Remaining work is deployment and
 submission only (see submission-checklist.md).
+
+## Update 2026-11-05
+
+The user authorized further real Kiro work for Kiroween (credits requested, not yet received). Session
+briefs are in docs/kiro-briefs/ and are run with scripts/kiro_session.py. Until a session runs, the Kiro
+contribution record is unchanged: exactly one session. The statements above that no Kiro work is planned
+are superseded.

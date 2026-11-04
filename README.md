@@ -104,8 +104,15 @@ pause for user choices by default. The browser uses the real persisted simulatio
 
 Kiro wrote the initial engine specification, implementation and 60 tests in one real CLI session.
 Codex reviewed it, corrected gaps, and added 22 regression/property tests locally. No further Kiro
-model calls were made after the user's credit-conservation request. See [Kiro evidence](docs/kiro-evidence.md)
+model calls were made between that session and November 5, 2026. See [Kiro evidence](docs/kiro-evidence.md)
 and [engine review](docs/ENGINE_REVIEW.md) for exact attribution and limitations.
+
+**Kiro integration surface (prepared, not yet exercised by Kiro):** `scripts/ghostshift_mcp.py` is a
+standard-library MCP server that lets an agent such as Kiro start, drive, replay and report rehearsals
+through the real `/api`; `.kiro/settings/mcp.json` registers it. Claude Code wrote it, with tests, so it
+counts as Kiro usage only once a logged Kiro session calls it. Further Kiro sessions are planned
+(briefs in [docs/kiro-briefs](docs/kiro-briefs/README.md)); `make audit` lists which Kiroween repository
+requirements are still unmet. Judges: see the [judge guide](docs/JUDGE_GUIDE.md).
 
 ## Rehearse in the browser
 

@@ -1,4 +1,4 @@
-.PHONY: install dev api web seed test lint typecheck format e2e e2e-public e2e-containers prepare-demo clean-demo engine-demo record-demo
+.PHONY: audit smoke install dev api web seed test lint typecheck format e2e e2e-public e2e-containers prepare-demo clean-demo engine-demo record-demo
 install:
 	cd apps/web && npm ci
 	cd services/api && uv sync --locked
@@ -41,3 +41,11 @@ e2e-containers:
 # macOS recording helper; requires local say, Caddy and FFmpeg (or FFMPEG_PATH).
 record-demo:
 	node scripts/record-demo.mjs
+
+# Repository-level Kiroween compliance audit (fails until Kiro hooks/agents/specs/evidence exist).
+audit:
+	python3 scripts/submission_audit.py
+
+# Usage: make smoke URL=https://demo.example.org
+smoke:
+	python3 scripts/smoke_live.py $(URL)

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "ghostshift": {
+      "command": "python3",
+      "args": ["scripts/ghostshift_mcp.py"],
+      "env": { "GHOSTSHIFT_API_URL": "http://127.0.0.1:8000" },
+      "disabled": false,
+      "autoApprove": [
+        "ghostshift_health",
+        "ghostshift_list_demos",
+        "ghostshift_get_session",
+        "ghostshift_verify_replay",
+        "ghostshift_session_report"
+      ]
+    }
+  }
+}

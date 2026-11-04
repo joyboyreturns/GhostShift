@@ -1,5 +1,10 @@
 # Next implementation tasks for Kiro
 
+> **Update 2026-11-05:** the statements below that no new Kiro calls are authorized are superseded.
+> The user authorized real Kiro work for Kiroween. Briefs: docs/kiro-briefs/. Runner:
+> scripts/kiro_session.py. Credits are requested; no new session has run yet.
+
+
 These are Codex-authored planning tasks. The M2 engine specification, initial implementation and
 60 tests were authored by one actual Kiro session; Codex reviewed/corrected the result and added
 22 tests. Final checks pass. See kiro-evidence.md and ENGINE_REVIEW.md.

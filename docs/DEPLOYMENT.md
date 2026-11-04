@@ -128,3 +128,31 @@ HTTP/cookie/TTL/write-rate settings only in its private temporary configuration;
 are unchanged. It removes only its own disposable containers/volumes, retaining built image caches.
 Evidence is written to `artifacts/container-validation.json` and uploaded by CI. This is not a public
 URL or TLS check. Use `python3 scripts/verify-containers.py --help` for context/port/report options.
+
+## Fast path: provisioning script, smoke test and hosting options (added 2026-11-05)
+
+`deploy/provision-ubuntu.sh` installs Docker if missing, creates `deploy/.env.public` with a fresh
+secret (never overwriting an existing one), builds, prepares the template and starts the stack:
+
+```sh
+DEMO_DOMAIN=demo.example.org ./deploy/provision-ubuntu.sh
+python3 scripts/smoke_live.py https://demo.example.org
+```
+
+`scripts/smoke_live.py` checks health, SPA deep links, security headers, workspace allocation and cookie
+flags, a rehearsal with verified replay, and cross-workspace isolation. It passed against the local Caddy +
+API production path with `--insecure-http` on 2026-11-05. It does not replace the manual TLS, DNS,
+firewall, restart and 24-hour expiry checks above.
+
+**Hosting options** (the deployment must stay up and free for judges until January 29, 2027):
+
+- Any small Ubuntu VM with ports 80/443 (the stack is one API instance plus Caddy; the images have been
+  verified on linux/arm64 and linux/amd64). Oracle Cloud's Always Free tier or a low-cost VPS both fit.
+- No domain? Caddy can obtain certificates for a wildcard-DNS name such as `203-0-113-10.sslip.io`
+  (replace with the server IP, dashes for dots). This depends on a third-party DNS service; treat it
+  as a fallback and note it in the submission if used.
+- Platforms without a persistent local disk are unsuitable: the API needs POSIX locks and SQLite WAL.
+
+Do not publish the URL, or record it in `docs/submission-links.json`, until `smoke_live.py` and the
+manual checks pass.
+
