@@ -29,7 +29,15 @@ export function Evidence({
         </p>
       )}
       {document.error && (
-        <p role="alert">Source unavailable: {document.error.message}</p>
+        <p role="alert">
+          Source unavailable: {document.error.message}{" "}
+          <button
+            className="text-action"
+            onClick={() => void document.refetch()}
+          >
+            Retry source
+          </button>
+        </p>
       )}
       {document.data && (
         <>

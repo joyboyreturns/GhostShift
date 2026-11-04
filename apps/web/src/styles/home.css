@@ -73,17 +73,12 @@
 .hg-page {
   filter: drop-shadow(0 24px 40px rgb(0 0 0 / 0.6));
 }
-.hg-line {
-  animation: twinkle 2.8s ease-in-out infinite alternate;
-}
 .hg-edges path {
   stroke-dasharray: 8 8;
-  animation: edge-flow 1.8s linear infinite;
 }
 .hg-ghost {
   transform-box: fill-box;
   transform-origin: center;
-  animation: ghost-bob 3.2s ease-in-out infinite;
   filter: drop-shadow(0 0 18px rgb(201 184 255 / 0.7));
 }
 

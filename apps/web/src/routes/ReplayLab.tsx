@@ -253,7 +253,6 @@ export function ReplayLab() {
             </select>
           </label>
         </div>
-        {runs.error && <p role="alert">{runs.error.message}</p>}
         {!compare && <p>Choose a different run to compare.</p>}
       </section>
       {compare && (

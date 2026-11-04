@@ -93,6 +93,9 @@ function ReviewWorkspace({
     playbook.graph.nodes.some(
       (node) => node.type === "action" && !node.source_refs.length,
     );
+  const saving =
+    approval.isPending || revision.isPending || importSource.isPending;
+  const unsavedSource = sourceText !== source.content;
   return (
     <article className="review-page">
       <span className="eyebrow">Source Studio / Human review</span>
@@ -157,121 +160,125 @@ function ReviewWorkspace({
             approval.mutate();
           }}
         >
-          {rules.map(({ node, choice, key }) => (
-            <fieldset className="review-rule" key={key}>
-              <legend>
-                {node.label} / {choice.label}
-              </legend>
-              <ul>
-                {choice.conditions.map((condition, index) => (
-                  <li key={index}>
-                    {condition.field} {operatorLabels[condition.operator]}{" "}
-                    {JSON.stringify(condition.value)}
-                  </li>
-                ))}
-              </ul>
-              <p>
-                Continues to:{" "}
-                {
-                  playbook.graph.nodes.find(
-                    (node) => node.id === choice.destination,
-                  )?.label
-                }
-              </p>
-              {choice.source_refs.map((ref) => {
-                const segment = document.segments.find(
-                  (segment) => segment.id === ref,
-                );
-                return (
-                  <blockquote key={ref}>
-                    §{segment?.ordinal} {segment?.text}
-                  </blockquote>
-                );
-              })}
-              {!choice.source_refs.length && <p>No supporting source cited.</p>}
-              {playbook.status === "draft" && (
+          <fieldset className="authoring-fields" disabled={saving}>
+            {rules.map(({ node, choice, key }) => (
+              <fieldset className="review-rule" key={key}>
+                <legend>
+                  {node.label} / {choice.label}
+                </legend>
+                <ul>
+                  {choice.conditions.map((condition, index) => (
+                    <li key={index}>
+                      {condition.field} {operatorLabels[condition.operator]}{" "}
+                      {JSON.stringify(condition.value)}
+                    </li>
+                  ))}
+                </ul>
+                <p>
+                  Continues to:{" "}
+                  {
+                    playbook.graph.nodes.find(
+                      (node) => node.id === choice.destination,
+                    )?.label
+                  }
+                </p>
+                {choice.source_refs.map((ref) => {
+                  const segment = document.segments.find(
+                    (segment) => segment.id === ref,
+                  );
+                  return (
+                    <blockquote key={ref}>
+                      §{segment?.ordinal} {segment?.text}
+                    </blockquote>
+                  );
+                })}
+                {!choice.source_refs.length && (
+                  <p>No supporting source cited.</p>
+                )}
+                {playbook.status === "draft" && (
+                  <label className="consent">
+                    <input
+                      type="checkbox"
+                      checked={reviewed.includes(key)}
+                      disabled={!choice.source_refs.length}
+                      onChange={(event) =>
+                        setReviewed((previous) =>
+                          event.target.checked
+                            ? [...previous, key]
+                            : previous.filter((item) => item !== key),
+                        )
+                      }
+                    />
+                    I verified this choice and all its conditions against the
+                    cited source.
+                  </label>
+                )}
+              </fieldset>
+            ))}
+            {playbook.graph.nodes
+              .filter((node) => node.type === "action")
+              .map((node) => (
+                <section className="review-rule" key={node.id}>
+                  <h3>Action: {node.label}</h3>
+                  {node.source_refs.map((ref) => (
+                    <blockquote key={ref}>
+                      {
+                        document.segments.find((segment) => segment.id === ref)
+                          ?.text
+                      }
+                    </blockquote>
+                  ))}
+                </section>
+              ))}
+            {playbook.status === "draft" && (
+              <div className="approval-fields">
+                <label>
+                  Reviewer name
+                  <input
+                    required
+                    maxLength={100}
+                    value={reviewer}
+                    onChange={(event) => setReviewer(event.target.value)}
+                  />
+                </label>
+                <label>
+                  Review notes
+                  <textarea
+                    required
+                    maxLength={2000}
+                    value={notes}
+                    onChange={(event) => setNotes(event.target.value)}
+                    rows={3}
+                  />
+                </label>
                 <label className="consent">
                   <input
                     type="checkbox"
-                    checked={reviewed.includes(key)}
-                    disabled={!choice.source_refs.length}
-                    onChange={(event) =>
-                      setReviewed((previous) =>
-                        event.target.checked
-                          ? [...previous, key]
-                          : previous.filter((item) => item !== key),
-                      )
-                    }
+                    checked={confirmed}
+                    onChange={(event) => setConfirmed(event.target.checked)}
                   />
-                  I verified this choice and all its conditions against the
-                  cited source.
+                  I confirm the entire modeled procedure, including action
+                  nodes, is supported by this source. I understand approval
+                  makes this version immutable.
                 </label>
-              )}
-            </fieldset>
-          ))}
-          {playbook.graph.nodes
-            .filter((node) => node.type === "action")
-            .map((node) => (
-              <section className="review-rule" key={node.id}>
-                <h3>Action: {node.label}</h3>
-                {node.source_refs.map((ref) => (
-                  <blockquote key={ref}>
-                    {
-                      document.segments.find((segment) => segment.id === ref)
-                        ?.text
-                    }
-                  </blockquote>
-                ))}
-              </section>
-            ))}
-          {playbook.status === "draft" && (
-            <div className="approval-fields">
-              <label>
-                Reviewer name
-                <input
-                  required
-                  maxLength={100}
-                  value={reviewer}
-                  onChange={(event) => setReviewer(event.target.value)}
-                />
-              </label>
-              <label>
-                Review notes
-                <textarea
-                  required
-                  maxLength={2000}
-                  value={notes}
-                  onChange={(event) => setNotes(event.target.value)}
-                  rows={3}
-                />
-              </label>
-              <label className="consent">
-                <input
-                  type="checkbox"
-                  checked={confirmed}
-                  onChange={(event) => setConfirmed(event.target.checked)}
-                />
-                I confirm the entire modeled procedure, including action nodes,
-                is supported by this source. I understand approval makes this
-                version immutable.
-              </label>
-              <Button
-                disabled={
-                  empty ||
-                  uncited ||
-                  reviewed.length !== rules.length ||
-                  !confirmed ||
-                  !reviewer.trim() ||
-                  !notes.trim() ||
-                  approval.isPending
-                }
-              >
-                {approval.isPending
-                  ? "Recording review…"
-                  : "Approve reviewed version"}
-              </Button>
-            </div>
-          )}
+                <Button
+                  disabled={
+                    empty ||
+                    uncited ||
+                    reviewed.length !== rules.length ||
+                    !confirmed ||
+                    !reviewer.trim() ||
+                    !notes.trim() ||
+                    approval.isPending
+                  }
+                >
+                  {approval.isPending
+                    ? "Recording review…"
+                    : "Approve reviewed version"}
+                </Button>
+              </div>
+            )}
+          </fieldset>
         </form>
         {playbook.status === "approved" && (
           <div role="status">
@@ -282,223 +289,250 @@ function ReviewWorkspace({
               </p>
             )}
             {audit.isPending && <p>Loading review record…</p>}
-            {audit.error && <p role="alert">{audit.error.message}</p>}
+            {audit.error && (
+              <p role="alert">
+                {audit.error.message}{" "}
+                <button
+                  className="text-action"
+                  onClick={() => void audit.refetch()}
+                >
+                  Retry review record
+                </button>
+              </p>
+            )}
           </div>
         )}
         {approval.error && <p role="alert">{approval.error.message}</p>}
       </section>
-      <details
-        className="panel report-section"
-        open={params.get("edit") === "1" || empty ? true : undefined}
-      >
-        <summary>Create a new revision</summary>
-        <p>
-          Changes create a separate draft version. Existing approvals, sources
-          and rehearsals remain pinned.
-        </p>
-        <details>
-          <summary>Revise the source document</summary>
-          <p>
-            Saving revised source clears all old references. Explicitly cite the
-            new sections below.
-          </p>
-          <label>
-            Revised procedure
-            <textarea
-              rows={12}
-              maxLength={100000}
-              value={sourceText}
-              onChange={(event) => setSourceText(event.target.value)}
-            />
-          </label>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={
-              importSource.isPending ||
-              !sourceText.trim() ||
-              sourceText === source.content
-            }
-            onClick={() => importSource.mutate()}
-          >
-            {importSource.isPending
-              ? "Saving…"
-              : "Save revised source snapshot"}
-          </Button>
-          {source.id !== document.id && (
-            <p role="status">
-              New source saved. Select its supporting sections for each rule.
-            </p>
-          )}
-          {importSource.error && (
-            <p role="alert">{importSource.error.message}</p>
-          )}
-        </details>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            revision.mutate();
-          }}
+      <fieldset className="authoring-fields" disabled={saving}>
+        <details
+          className="panel report-section"
+          open={params.get("edit") === "1" || empty ? true : undefined}
         >
-          <Button
-            type="button"
-            variant="outline"
-            disabled={graph.nodes.length >= 200}
-            onClick={() =>
-              setGraph((previous) => insertStep(previous, "decision"))
-            }
-          >
-            Add decision before completion
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={graph.nodes.length >= 200}
-            onClick={() =>
-              setGraph((previous) => insertStep(previous, "action"))
-            }
-          >
-            Add action before completion
-          </Button>
-          {graph.nodes
-            .filter((node) => node.type === "decision")
-            .map((node) => (
-              <section
-                className="revision-node"
-                key={`${node.id}-${source.id}`}
+          <summary>Create a new revision</summary>
+          <p>
+            Changes create a separate draft version. Existing approvals, sources
+            and rehearsals remain pinned.
+          </p>
+          <details>
+            <summary>Revise the source document</summary>
+            <p>
+              Saving revised source clears all old references. Explicitly cite
+              the new sections below.
+            </p>
+            <label>
+              Revised procedure
+              <textarea
+                rows={12}
+                maxLength={100000}
+                value={sourceText}
+                onChange={(event) => setSourceText(event.target.value)}
+              />
+            </label>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={
+                importSource.isPending ||
+                !sourceText.trim() ||
+                sourceText === source.content
+              }
+              onClick={() => importSource.mutate()}
+            >
+              {importSource.isPending
+                ? "Saving…"
+                : "Save revised source snapshot"}
+            </Button>
+            {source.id !== document.id && (
+              <p role="status">
+                New source saved. Select its supporting sections for each rule.
+              </p>
+            )}
+            {importSource.error && (
+              <p role="alert">{importSource.error.message}</p>
+            )}
+          </details>
+          {unsavedSource && (
+            <div role="status">
+              <p>
+                Source edits are not saved. Save a source snapshot before saving
+                the draft, or discard these text edits.
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setSourceText(source.content)}
               >
-                <label>
-                  Decision question
-                  <input
-                    required
-                    maxLength={300}
-                    value={node.label}
-                    onChange={(event) =>
-                      setGraph((previous) => ({
-                        nodes: previous.nodes.map((existing) =>
-                          existing.id === node.id
-                            ? { ...existing, label: event.target.value }
-                            : existing,
-                        ),
-                      }))
-                    }
-                  />
-                </label>
-                <StepRemoval
-                  node={node}
-                  nodes={graph.nodes}
-                  onRemove={(replacement) =>
-                    setGraph((previous) =>
-                      removeStep(previous, node.id, replacement),
-                    )
-                  }
-                />
-                <ChoiceEditor
-                  nodes={graph.nodes}
-                  choices={node.choices}
-                  source={source}
-                  onChange={(choices) =>
-                    setGraph((previous) => ({
-                      nodes: previous.nodes.map((existing) =>
-                        existing.id === node.id
-                          ? { ...existing, choices }
-                          : existing,
-                      ),
-                    }))
-                  }
-                />
-              </section>
-            ))}
-          {graph.nodes
-            .filter((node) => node.type === "action")
-            .map((node) => (
-              <fieldset key={node.id}>
-                <legend>Action evidence: {node.label}</legend>
-                <label>
-                  Action step label
-                  <input
-                    required
-                    maxLength={300}
-                    value={node.label}
-                    onChange={(event) =>
-                      setGraph((previous) => ({
-                        nodes: previous.nodes.map((existing) =>
-                          existing.id === node.id
-                            ? { ...existing, label: event.target.value }
-                            : existing,
-                        ),
-                      }))
-                    }
-                  />
-                </label>
-                <StepRemoval
-                  node={node}
-                  nodes={graph.nodes}
-                  onRemove={(replacement) =>
-                    setGraph((previous) =>
-                      removeStep(previous, node.id, replacement),
-                    )
-                  }
-                />
-                <label>
-                  Continue after this action
-                  <select
-                    aria-label="Continue after this action"
-                    value={node.next_node ?? ""}
-                    onChange={(event) =>
-                      setGraph((previous) => ({
-                        nodes: previous.nodes.map((existing) =>
-                          existing.id === node.id
-                            ? { ...existing, next_node: event.target.value }
-                            : existing,
-                        ),
-                      }))
-                    }
-                  >
-                    {graph.nodes.map((next) => (
-                      <option key={next.id} value={next.id}>
-                        {next.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                {source.segments.map((segment) => (
-                  <label className="consent" key={segment.id}>
+                Discard unsaved source edits
+              </Button>
+            </div>
+          )}
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              revision.mutate();
+            }}
+          >
+            <Button
+              type="button"
+              variant="outline"
+              disabled={graph.nodes.length >= 200}
+              onClick={() =>
+                setGraph((previous) => insertStep(previous, "decision"))
+              }
+            >
+              Add decision before completion
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={graph.nodes.length >= 200}
+              onClick={() =>
+                setGraph((previous) => insertStep(previous, "action"))
+              }
+            >
+              Add action before completion
+            </Button>
+            {graph.nodes
+              .filter((node) => node.type === "decision")
+              .map((node) => (
+                <section
+                  className="revision-node"
+                  key={`${node.id}-${source.id}`}
+                >
+                  <label>
+                    Decision question
                     <input
-                      type="checkbox"
-                      checked={node.source_refs.includes(segment.id)}
+                      required
+                      maxLength={300}
+                      value={node.label}
                       onChange={(event) =>
                         setGraph((previous) => ({
                           nodes: previous.nodes.map((existing) =>
-                            existing.id !== node.id
-                              ? existing
-                              : {
-                                  ...existing,
-                                  source_refs: event.target.checked
-                                    ? [...existing.source_refs, segment.id]
-                                    : existing.source_refs.filter(
-                                        (ref) => ref !== segment.id,
-                                      ),
-                                },
+                            existing.id === node.id
+                              ? { ...existing, label: event.target.value }
+                              : existing,
                           ),
                         }))
                       }
                     />
-                    §{segment.ordinal} {segment.text}
                   </label>
-                ))}
-              </fieldset>
-            ))}
-          <Button disabled={revision.isPending || importSource.isPending}>
-            {revision.isPending ? "Saving…" : "Save draft revision"}
-          </Button>
-          {revision.error && (
-            <p role="alert">
-              {revision.error.message} Your edits are preserved.
-            </p>
-          )}
-        </form>
-      </details>
+                  <StepRemoval
+                    node={node}
+                    nodes={graph.nodes}
+                    onRemove={(replacement) =>
+                      setGraph((previous) =>
+                        removeStep(previous, node.id, replacement),
+                      )
+                    }
+                  />
+                  <ChoiceEditor
+                    nodes={graph.nodes}
+                    choices={node.choices}
+                    source={source}
+                    onChange={(choices) =>
+                      setGraph((previous) => ({
+                        nodes: previous.nodes.map((existing) =>
+                          existing.id === node.id
+                            ? { ...existing, choices }
+                            : existing,
+                        ),
+                      }))
+                    }
+                  />
+                </section>
+              ))}
+            {graph.nodes
+              .filter((node) => node.type === "action")
+              .map((node) => (
+                <fieldset key={node.id}>
+                  <legend>Action evidence: {node.label}</legend>
+                  <label>
+                    Action step label
+                    <input
+                      required
+                      maxLength={300}
+                      value={node.label}
+                      onChange={(event) =>
+                        setGraph((previous) => ({
+                          nodes: previous.nodes.map((existing) =>
+                            existing.id === node.id
+                              ? { ...existing, label: event.target.value }
+                              : existing,
+                          ),
+                        }))
+                      }
+                    />
+                  </label>
+                  <StepRemoval
+                    node={node}
+                    nodes={graph.nodes}
+                    onRemove={(replacement) =>
+                      setGraph((previous) =>
+                        removeStep(previous, node.id, replacement),
+                      )
+                    }
+                  />
+                  <label>
+                    Continue after this action
+                    <select
+                      aria-label="Continue after this action"
+                      value={node.next_node ?? ""}
+                      onChange={(event) =>
+                        setGraph((previous) => ({
+                          nodes: previous.nodes.map((existing) =>
+                            existing.id === node.id
+                              ? { ...existing, next_node: event.target.value }
+                              : existing,
+                          ),
+                        }))
+                      }
+                    >
+                      {graph.nodes.map((next) => (
+                        <option key={next.id} value={next.id}>
+                          {next.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  {source.segments.map((segment) => (
+                    <label className="consent" key={segment.id}>
+                      <input
+                        type="checkbox"
+                        checked={node.source_refs.includes(segment.id)}
+                        onChange={(event) =>
+                          setGraph((previous) => ({
+                            nodes: previous.nodes.map((existing) =>
+                              existing.id !== node.id
+                                ? existing
+                                : {
+                                    ...existing,
+                                    source_refs: event.target.checked
+                                      ? [...existing.source_refs, segment.id]
+                                      : existing.source_refs.filter(
+                                          (ref) => ref !== segment.id,
+                                        ),
+                                  },
+                            ),
+                          }))
+                        }
+                      />
+                      §{segment.ordinal} {segment.text}
+                    </label>
+                  ))}
+                </fieldset>
+              ))}
+            <Button disabled={saving || unsavedSource}>
+              {revision.isPending ? "Saving…" : "Save draft revision"}
+            </Button>
+            {revision.error && (
+              <p role="alert">
+                {revision.error.message} Your edits are preserved.
+              </p>
+            )}
+          </form>
+        </details>
+      </fieldset>
     </article>
   );
 }

@@ -70,9 +70,6 @@ main {
   position: relative;
   min-height: calc(100vh - 160px);
 }
-main > * {
-  animation: rise-in 0.5s var(--ease) both;
-}
 
 /* ---------- Header ---------- */
 .app-header {
@@ -110,9 +107,6 @@ main > * {
     var(--violet) 100%
   );
   box-shadow: 0 0 22px -2px rgb(167 139 250 / 0.75);
-}
-.brand-icon svg {
-  animation: ghost-bob 3.6s ease-in-out infinite;
 }
 .preview-label {
   font: 600 9.5px var(--font-mono);
@@ -518,7 +512,6 @@ textarea::placeholder {
 }
 .react-flow__edge-path {
   stroke-dasharray: 6 6;
-  animation: edge-flow 1.6s linear infinite;
 }
 .react-flow__edge-text {
   fill: var(--soft);
@@ -632,7 +625,6 @@ blockquote span {
   background: rgb(255 180 92 / 0.15)
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb45c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 10h.01M15 10h.01M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z'/%3E%3C/svg%3E")
     center / 18px no-repeat;
-  animation: pulse-ring 2.4s ease-out infinite;
 }
 .stop-explanation h3 {
   color: var(--amber);
@@ -1061,7 +1053,6 @@ tbody tr:hover {
   height: 96px;
   color: var(--violet-soft);
   filter: drop-shadow(0 0 30px rgb(167 139 250 / 0.7));
-  animation: ghost-bob 4s ease-in-out infinite;
 }
 .lost-ghost .button {
   margin-top: 18px;

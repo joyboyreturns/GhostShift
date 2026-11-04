@@ -1,5 +1,11 @@
 # Local application screenshots
 
+All application images below were refreshed November 4, 2026 after the restrained Kiroween
+quality pass. Captures use real Chromium journeys against the dedicated disposable quality-review
+database, at 1440 px (landing), 1280 px (desktop workflows) and 390 px (mobile). Library shows
+fictional saved work produced by the tests. No responses were mocked for these captures. The
+historical capture notes below describe earlier image versions. See [quality review](../QUALITY_REVIEW.md).
+
 Recaptured November 3, 2026 after the Kiroween visual overhaul (see ../DESIGN.md). They were taken
 with Playwright/Chromium against the real local API and a freshly migrated and seeded SQLite
 database, with no mock data. Every procedure and scenario shown is explicitly fictional. These are

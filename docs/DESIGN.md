@@ -1,5 +1,22 @@
 # Visual design: "haunted command center"
 
+## Current direction — November 4, 2026
+
+The local release quality pass keeps the Kiroween identity with a calmer working surface.
+Landing artwork is static; the shared shell no longer includes flying bats, corner artwork on
+working pages, or a graveyard footer. The Studio corner cobweb is removed. Brand bobbing,
+route fade-ins, graph-edge motion and the repeating warning pulse are removed. Loading indicators
+retain restrained motion and respect reduced-motion preferences. Dispatch arrivals remain brief,
+user-triggered transitions. Working-page badges, navigation and fact/report values use less glow.
+
+Loading and missing-page messages use direct language. The landing page retains the ghost-path
+illustration and outcome tombstones, with clearer workflow labels and fewer decorative pieces.
+Keyboard focus, status colours, draft/proposal notices, citations and print content remain intact.
+The earlier design record below describes the original overhaul; this section supersedes its
+global-decoration and animation descriptions. See [QUALITY_REVIEW.md](QUALITY_REVIEW.md).
+
+## Original overhaul
+
 November 3, 2026. The Kiroween visual overhaul is presentation only: no engine, API, schema or
 persistence code changed, and no Kiro model session was used. Earlier Kiro and Codex
 contributions keep their attribution (see kiro-evidence.md and ENGINE_REVIEW.md).

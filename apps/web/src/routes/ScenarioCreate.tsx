@@ -4,7 +4,12 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { api, workspaceApi, type Playbook } from "../lib/api";
 import { Button } from "../components/ui/button";
 import { FactsEditor } from "../features/scenarios/FactsEditor";
-import { newFact, readFacts, type FactDraft } from "../lib/scenarioDraft";
+import {
+  newFact,
+  readFacts,
+  factKind,
+  type FactDraft,
+} from "../lib/scenarioDraft";
 
 function ScenarioForm({ playbook }: { playbook: Playbook }) {
   const navigate = useNavigate();
@@ -27,16 +32,7 @@ function ScenarioForm({ playbook }: { playbook: Playbook }) {
   const [facts, setFacts] = useState<FactDraft[]>(() =>
     fields
       .slice(0, 64)
-      .map((condition) =>
-        newFact(
-          condition.field,
-          typeof condition.value === "boolean"
-            ? "boolean"
-            : typeof condition.value === "number"
-              ? "number"
-              : "text",
-        ),
-      ),
+      .map((condition) => newFact(condition.field, factKind(condition.value))),
   );
   const [injects, setInjects] = useState<
     { id: string; node: string; facts: FactDraft[] }[]
@@ -71,7 +67,7 @@ function ScenarioForm({ playbook }: { playbook: Playbook }) {
       <p>
         Choose hypothetical facts and scheduled changes for{" "}
         <strong>{playbook.title}</strong> v{playbook.version}. The existing
-        deterministic engine evaluates the saved rules. A scenario does not
+        rules determine which choices match these facts. A scenario does not
         approve a policy.
       </p>
       <Link to={`/studio?playbook=${playbook.id}`}>Inspect this version ↗</Link>
@@ -82,130 +78,132 @@ function ScenarioForm({ playbook }: { playbook: Playbook }) {
           save.mutate();
         }}
       >
-        <label>
-          Scenario title
-          <input
-            required
-            maxLength={200}
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-        </label>
-        <label>
-          Description
-          <textarea
-            rows={3}
-            maxLength={2000}
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-          />
-        </label>
-        <label>
-          Reproducibility seed
-          <input
-            type="number"
-            min={0}
-            max={2147483647}
-            step={1}
-            required
-            value={seed}
-            onChange={(event) => setSeed(event.target.value)}
-          />
-        </label>
-        <section className="panel report-section">
-          <h2>Starting facts</h2>
-          <p className="muted">
-            Names come from the modeled conditions. Supply your own values; an
-            omitted fact can expose an uncovered path.
-          </p>
-          <FactsEditor
-            rows={facts}
-            onChange={setFacts}
-            fields={fields.map((field) => field.field)}
-          />
-        </section>
-        <section className="panel report-section">
-          <h2>Scheduled fact changes</h2>
-          <p className="muted">
-            Changes apply once, immediately before the selected step, in the
-            order shown.
-          </p>
-          {injects.map((inject, index) => (
-            <fieldset className="inject-editor" key={inject.id}>
-              <legend>Change {index + 1}</legend>
-              <label>
-                Before step
-                <select
-                  required
-                  aria-label="Before step"
-                  value={inject.node}
-                  onChange={(event) =>
+        <fieldset className="authoring-fields" disabled={save.isPending}>
+          <label>
+            Scenario title
+            <input
+              required
+              maxLength={200}
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+            />
+          </label>
+          <label>
+            Description
+            <textarea
+              rows={3}
+              maxLength={2000}
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+            />
+          </label>
+          <label>
+            Reproducibility seed
+            <input
+              type="number"
+              min={0}
+              max={2147483647}
+              step={1}
+              required
+              value={seed}
+              onChange={(event) => setSeed(event.target.value)}
+            />
+          </label>
+          <section className="panel report-section">
+            <h2>Starting facts</h2>
+            <p className="muted">
+              Names come from the modeled conditions. Supply your own values; an
+              omitted fact can expose an uncovered path.
+            </p>
+            <FactsEditor
+              rows={facts}
+              onChange={setFacts}
+              fields={fields.map((field) => field.field)}
+            />
+          </section>
+          <section className="panel report-section">
+            <h2>Scheduled fact changes</h2>
+            <p className="muted">
+              Changes apply once, immediately before the selected step, in the
+              order shown.
+            </p>
+            {injects.map((inject, index) => (
+              <fieldset className="inject-editor" key={inject.id}>
+                <legend>Change {index + 1}</legend>
+                <label>
+                  Before step
+                  <select
+                    required
+                    aria-label="Before step"
+                    value={inject.node}
+                    onChange={(event) =>
+                      setInjects((previous) =>
+                        previous.map((item) =>
+                          item.id === inject.id
+                            ? { ...item, node: event.target.value }
+                            : item,
+                        ),
+                      )
+                    }
+                  >
+                    <option value="">Choose a step…</option>
+                    {playbook.graph.nodes.map((node) => (
+                      <option value={node.id} key={node.id}>
+                        {node.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <FactsEditor
+                  rows={inject.facts}
+                  onChange={(facts) =>
                     setInjects((previous) =>
                       previous.map((item) =>
-                        item.id === inject.id
-                          ? { ...item, node: event.target.value }
-                          : item,
+                        item.id === inject.id ? { ...item, facts } : item,
                       ),
                     )
                   }
+                  fields={fields.map((field) => field.field)}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() =>
+                    setInjects((previous) =>
+                      previous.filter((item) => item.id !== inject.id),
+                    )
+                  }
                 >
-                  <option value="">Choose a step…</option>
-                  {playbook.graph.nodes.map((node) => (
-                    <option value={node.id} key={node.id}>
-                      {node.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <FactsEditor
-                rows={inject.facts}
-                onChange={(facts) =>
-                  setInjects((previous) =>
-                    previous.map((item) =>
-                      item.id === inject.id ? { ...item, facts } : item,
-                    ),
-                  )
-                }
-                fields={fields.map((field) => field.field)}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() =>
-                  setInjects((previous) =>
-                    previous.filter((item) => item.id !== inject.id),
-                  )
-                }
-              >
-                Remove change
-              </Button>
-            </fieldset>
-          ))}
-          <Button
-            type="button"
-            variant="outline"
-            disabled={injects.length >= 20}
-            onClick={() =>
-              setInjects((previous) => [
-                ...previous,
-                { id: crypto.randomUUID(), node: "", facts: [newFact()] },
-              ])
-            }
-          >
-            Add scheduled change
+                  Remove change
+                </Button>
+              </fieldset>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              disabled={injects.length >= 20}
+              onClick={() =>
+                setInjects((previous) => [
+                  ...previous,
+                  { id: crypto.randomUUID(), node: "", facts: [newFact()] },
+                ])
+              }
+            >
+              Add scheduled change
+            </Button>
+          </section>
+          <label className="consent">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(event) => setConsent(event.target.checked)}
+            />
+            This is a fictional training scenario, not a live incident.
+          </label>
+          <Button disabled={!consent || save.isPending}>
+            {save.isPending ? "Saving…" : "Save scenario"}
           </Button>
-        </section>
-        <label className="consent">
-          <input
-            type="checkbox"
-            checked={consent}
-            onChange={(event) => setConsent(event.target.checked)}
-          />
-          This is a fictional training scenario, not a live incident.
-        </label>
-        <Button disabled={!consent || save.isPending}>
-          {save.isPending ? "Saving…" : "Save scenario"}
-        </Button>
+        </fieldset>
         {save.error && (
           <p role="alert">{save.error.message} Your entries are preserved.</p>
         )}

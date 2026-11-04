@@ -1,4 +1,29 @@
 /* Shared finishing touches for authoring, rehearsal and portable evidence. */
+.authoring-fields {
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.authoring-fields:disabled {
+  opacity: 0.75;
+}
+.app-shell-workspace .haunt::before,
+.app-shell-workspace .haunt::after {
+  display: none;
+}
+.app-shell-workspace .badge,
+.app-shell-workspace .app-header nav a.active,
+.app-shell-workspace .library-tabs button[aria-current],
+.app-shell-workspace .library-card svg {
+  box-shadow: none;
+  filter: none;
+}
+.app-shell-workspace .facts-panel dd,
+.app-shell-workspace .report-outcome,
+.app-shell-workspace .report-stats strong {
+  text-shadow: none;
+}
 .import-fields {
   border: 0;
   padding: 0;

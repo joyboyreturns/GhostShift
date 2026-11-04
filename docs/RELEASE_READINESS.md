@@ -1,4 +1,4 @@
-# Release readiness — November 3, 2026
+# Release readiness — November 4, 2026
 
 The product and submission preparation are complete locally. No public application URL, uploaded
 YouTube video, entrant eligibility declaration, or final Devpost submission is claimed.
@@ -7,8 +7,11 @@ YouTube video, entrant eligibility declaration, or final Devpost submission is c
 
 - Cinematic incident experience with exact-version fictional briefings, real event dispatches, source
   diagnostics, branch relationships, unapproved experiments, comparisons and portable evidence.
-- Native checks: lint, strict types, 154 backend tests, 15 frontend tests, 19 development browser tests
+- Native checks: lint, strict types, 154 backend tests, 24 frontend tests, 31 development browser tests
   and the production-built Caddy public-workspace browser journey. See VALIDATION.md.
+- Local quality review: restrained Kiroween presentation, locked authoring fields during saves,
+  explicit unsaved-source handling, correctly typed membership facts, working scenario-list retry,
+  and refreshed application screenshots. See [QUALITY_REVIEW.md](QUALITY_REVIEW.md).
 - Actual production Docker builds and browser verification, including unchanged documents/sessions
   after restarting API/Caddy and real token expiry/database cleanup with a short allowed TTL.
   [Machine-readable evidence](evidence/container-validation.json) records Docker 29.5.2 and the tested

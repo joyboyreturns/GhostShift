@@ -62,9 +62,11 @@ and [release readiness](docs/RELEASE_READINESS.md) for the local narrated video 
 ## Build status
 
 Dependencies and both lockfiles are complete. Backend/frontend lint, type checks, 154 backend tests,
-15 frontend unit tests, 19 development browser tests plus one production-path Caddy browser test, migrations/seeding, and the production frontend
-build pass. Desktop/mobile Source Studio, Simulation Room, library, PDF source and report screenshots were inspected,
-and lint, typecheck, unit and browser tests were rerun after the Kiroween visual overhaul.
+24 frontend unit tests, 31 development browser tests plus one production-path Caddy browser test,
+and the production frontend build pass as of November 4, 2026. The local release quality pass
+also verified source/scenario save recovery, scenario value types, missing-record recovery and
+responsive journeys at 360, 390, 768 and 1440 px. Desktop/mobile/tablet and print captures were inspected.
+See the [quality review](docs/QUALITY_REVIEW.md) for fixes, evidence and verification limits.
 See docs/VALIDATION.md for exact commands/results and remaining limits.
 [Actual local screenshots](docs/screenshots/README.md) document the fictional demo workflows.
 

@@ -52,7 +52,17 @@ export function SourceDocument() {
           The latest 50 versions associated with this exact source record.
         </p>
         {models.isPending && <p role="status">Loading models…</p>}
-        {models.error && <p role="alert">{models.error.message}</p>}
+        {models.error && (
+          <p role="alert">
+            {models.error.message}{" "}
+            <button
+              className="text-action"
+              onClick={() => void models.refetch()}
+            >
+              Retry models
+            </button>
+          </p>
+        )}
         {models.data?.length === 0 && (
           <p>No modeled rules yet. Create a model to begin.</p>
         )}

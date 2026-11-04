@@ -17,7 +17,6 @@
 }
 .bat-wing {
   transform-box: fill-box;
-  animation: wing-flap 0.32s ease-in-out infinite alternate;
 }
 .bat-wing-left {
   transform-origin: right center;
@@ -32,7 +31,6 @@
 .pumpkin-face {
   fill: var(--candle);
   filter: drop-shadow(0 0 4px var(--candle));
-  animation: candle-flicker 2.6s steps(1, end) infinite;
 }
 .decor-web line,
 .decor-web path {
@@ -45,7 +43,6 @@
   width: 30px;
   color: #6a56b8;
   filter: drop-shadow(0 0 10px rgb(167 139 250 / 0.55));
-  animation: spider-dangle 5s ease-in-out infinite;
   transform-origin: top center;
   pointer-events: none;
 }
@@ -166,12 +163,11 @@
 }
 .gy-pumpkin-eyes {
   fill: var(--candle);
-  animation: candle-flicker 3.1s steps(1, end) infinite;
 }
 .app-footer {
-  margin-top: 0;
+  margin-top: 40px;
   background: #07040e;
-  border-top: 0;
+  border-top: 1px solid var(--line);
 }
 
 /* ---------- Studio ---------- */
@@ -191,8 +187,8 @@
 
 /* ---------- 404 ---------- */
 .lost-scene {
-  position: relative;
-  width: 200px;
+  display: grid;
+  place-items: center;
   margin: 0 auto 26px;
 }
 .lost-scene .decor-tomb {
@@ -200,9 +196,6 @@
   display: block;
 }
 .lost-scene .lost-ghost-icon {
-  position: absolute;
-  right: -18px;
-  top: 6px;
   width: 72px;
   height: 72px;
 }
@@ -211,7 +204,6 @@
 .hg-bat {
   position: absolute;
   z-index: 2;
-  animation: bat-hover 6s ease-in-out infinite;
 }
 .hg-bat-1 {
   width: 84px;

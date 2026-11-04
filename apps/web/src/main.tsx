@@ -6,7 +6,14 @@ import {
   useQuery,
   useMutation,
 } from "@tanstack/react-query";
-import { BrowserRouter, NavLink, Route, Routes, Link } from "react-router-dom";
+import {
+  BrowserRouter,
+  NavLink,
+  Route,
+  Routes,
+  Link,
+  useLocation,
+} from "react-router-dom";
 import {
   Ghost,
   BookOpen,
@@ -19,14 +26,7 @@ import { api } from "./lib/api";
 import { Button } from "./components/ui/button";
 import { RouteRecovery } from "./components/RouteRecovery";
 import { Home } from "./routes/Home";
-import {
-  Bat,
-  Cobweb,
-  Graveyard,
-  Moon,
-  Pumpkin,
-  Tombstone,
-} from "./components/decor/Spooky";
+import { Cobweb, Moon, Pumpkin } from "./components/decor/Spooky";
 const Studio = React.lazy(() =>
   import("./routes/Studio").then((module) => ({ default: module.Studio })),
 );
@@ -92,6 +92,7 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
 });
 export function App() {
+  const home = useLocation().pathname === "/";
   // Bootstrap before route requests so a new visitor's first concurrent API reads
   // all receive the same anonymous workspace cookie.
   const catalog = useQuery({ queryKey: ["catalog"], queryFn: api.catalog });
@@ -100,16 +101,18 @@ export function App() {
     onSuccess: () => window.location.assign("/"),
   });
   return (
-    <>
+    <div
+      className={`app-shell ${home ? "app-shell-home" : "app-shell-workspace"}`}
+    >
       <div className="haunt" aria-hidden="true">
-        <div className="haunt-stars" />
-        <div className="haunt-grain" />
-        <Moon className="haunt-moon" />
-        <Cobweb className="haunt-web haunt-web-left" />
-        <Cobweb className="haunt-web haunt-web-right" />
-        <Bat className="haunt-bat haunt-bat-1" />
-        <Bat className="haunt-bat haunt-bat-2" />
-        <Bat className="haunt-bat haunt-bat-3" />
+        {home && (
+          <>
+            <div className="haunt-stars" />
+            <div className="haunt-grain" />
+            <Moon className="haunt-moon" />
+            <Cobweb className="haunt-web haunt-web-left" />
+          </>
+        )}
       </div>
       <a className="skip-link" href="#main">
         Skip to content
@@ -189,7 +192,7 @@ export function App() {
         ) : (
           <RouteRecovery>
             <React.Suspense
-              fallback={<SpiritLoader label="Summoning workspace…" />}
+              fallback={<SpiritLoader label="Loading workspace…" />}
             >
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -226,12 +229,11 @@ export function App() {
                   path="*"
                   element={
                     <section className="message lost-ghost">
-                      <div className="lost-scene">
-                        <Tombstone lines={["THIS PAGE", "404"]} />
+                      <div className="lost-scene" aria-hidden="true">
                         <Ghost aria-hidden="true" className="lost-ghost-icon" />
                       </div>
-                      <span className="eyebrow">404 / Nothing haunts here</span>
-                      <h1>This page gave up the ghost.</h1>
+                      <span className="eyebrow">404 / Page not found</span>
+                      <h1>We couldn’t find this page.</h1>
                       <p>
                         The address does not match any page in this workspace.
                       </p>
@@ -246,7 +248,6 @@ export function App() {
           </RouteRecovery>
         )}
       </main>
-      <Graveyard className="footer-graveyard" />
       <footer className="app-footer">
         <span className="footer-brand">
           <Ghost size={14} aria-hidden="true" /> GhostShift · Kiroween 2026
@@ -254,7 +255,7 @@ export function App() {
         <Link to="/guide">Getting started ↗</Link>
         <span>Evidence first. Human judgment always.</span>
       </footer>
-    </>
+    </div>
   );
 }
 function SpiritLoader({ label }: { label: string }) {

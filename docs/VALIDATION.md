@@ -1,5 +1,23 @@
 # Validation — foundation, engine, rehearsals and policy workflow
 
+## Latest local quality verification — November 4, 2026
+
+The restrained Kiroween quality pass passes `make lint`, `make typecheck`, `make test`
+(154 backend, 24 frontend), `make e2e` (31 Chromium tests, two workers, no retries), and
+`make e2e-public` (production Vite build and one real loopback Caddy/API journey). Browser
+verification used a dedicated newly migrated `/private/tmp/ghostshift-quality.*` database;
+public tests used their own clean disposable templates/workspaces.
+
+Coverage now includes unsaved-source save boundaries, failed/in-flight source and scenario writes,
+membership operand types, Source Studio scenario-list recovery and invalid-record/page recovery.
+Ten-route responsive checks now include 390 px alongside 360, 768 and 1440 px. Additional
+seven-route reflow and keyboard checks used 720 CSS px at DPR 2 to emulate 200% zoom dimensions.
+Desktop, phone, tablet and print-media captures were inspected and the checked-in application
+screenshots refreshed. See [QUALITY_REVIEW.md](QUALITY_REVIEW.md) for findings, initial test
+failures and final verification limits. Engine, backend, dependencies and deployment are unchanged.
+
+Earlier dated counts and results below are historical records.
+
 November 3, 2026. M0–M6 are implemented locally. Kiro authored the initial engine specifications,
 implementation and 60 tests; subsequent Codex review and integration are separately attributed in
 kiro-evidence.md. No additional Kiro model sessions were used for M3, M4, M5 or M6.

@@ -143,7 +143,7 @@ test("a failed page module offers recovery instead of an empty screen", async ({
   );
 });
 
-for (const width of [360, 768, 1440]) {
+for (const width of [360, 390, 768, 1440]) {
   test(`existing journeys fit ${width}px with keyboard and reduced motion`, async ({
     page,
     request,

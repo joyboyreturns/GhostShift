@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Cobweb } from "../components/decor/Spooky";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router-dom";
 import { FileText, GitBranch, ScanLine, ArrowUpRight } from "lucide-react";
@@ -42,12 +41,15 @@ export function Studio() {
     return (
       <section className="message" role="alert">
         <h1>Source Studio couldn’t load</h1>
-        <p>{error.message}. Check the API is running, then retry.</p>
+        <p>{error.message}</p>
         <Button
           onClick={() => {
             void catalog.refetch();
-            void document.refetch();
-            void playbook.refetch();
+            if (playbook.data) void document.refetch();
+            if (playbookId) {
+              void playbook.refetch();
+              void scenarios.refetch();
+            }
           }}
         >
           Retry
@@ -150,7 +152,6 @@ export function Studio() {
         </div>
       </div>
       <div className="workbench">
-        <Cobweb className="panel-web" />
         <section className="panel source-panel">
           <header className="panel-heading">
             <FileText size={17} />

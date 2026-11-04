@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { newFact, readFacts } from "./scenarioDraft";
+import { newFact, readFacts, factKind } from "./scenarioDraft";
 describe("authored fact values", () => {
+  it("suggests scalar types for membership operands without coercing mixed lists", () => {
+    expect(factKind([1, 2])).toBe("number");
+    expect(factKind([true, false])).toBe("boolean");
+    expect(factKind(["rain", "wind"])).toBe("text");
+    expect(factKind([1, "1"])).toBe("text");
+    expect(factKind([])).toBe("text");
+    expect(factKind(false)).toBe("boolean");
+    expect(factKind(0)).toBe("number");
+  });
   it("preserves false, zero and quoted text as distinct scalar types", () => {
     const facts = readFacts([
       { ...newFact("count"), value: "0" },

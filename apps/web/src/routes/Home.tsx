@@ -10,13 +10,7 @@ import {
   ScrollText,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
-import {
-  Bat,
-  Cobweb,
-  Pumpkin,
-  Spider,
-  Tombstone,
-} from "../components/decor/Spooky";
+import { Bat, Cobweb, Tombstone } from "../components/decor/Spooky";
 
 const graves = [
   {
@@ -111,7 +105,6 @@ export function Home() {
       </section>
 
       <section className="home-pillars" aria-label="What GhostShift does">
-        <Spider className="pillars-spider" />
         {pillars.map(({ icon: Icon, title, text, tone }, index) => (
           <article className={`pillar pillar-${tone}`} key={title}>
             <span className="pillar-index">0{index + 1}</span>
@@ -127,10 +120,8 @@ export function Home() {
       <section className="home-graveyard" aria-labelledby="graveyard-heading">
         <Cobweb className="graveyard-web" />
         <div className="graveyard-copy">
-          <span className="eyebrow">The graveyard of missing rules</span>
-          <h2 id="graveyard-heading">
-            Three ways a playbook gives up the ghost.
-          </h2>
+          <span className="eyebrow">Understand the findings</span>
+          <h2 id="graveyard-heading">See where the procedure falls short.</h2>
           <p>
             The engine never invents an authoritative answer. These are the
             findings a rehearsal can surface, each linked back to the source.
@@ -145,15 +136,11 @@ export function Home() {
             </li>
           ))}
         </ul>
-        <div className="graveyard-pumpkins">
-          <Pumpkin className="pumpkin-lg" />
-          <Pumpkin className="pumpkin-sm" />
-        </div>
       </section>
 
       <section className="home-ritual" aria-labelledby="ritual-heading">
         <div>
-          <span className="eyebrow">The séance, step by step</span>
+          <span className="eyebrow">From rehearsal to evidence</span>
           <h2 id="ritual-heading">
             Unit tests for the playbooks nobody reads.
           </h2>
@@ -187,9 +174,6 @@ function HauntedGraph() {
       <div className="hg-moon" />
       <Bat className="hg-bat hg-bat-1" />
       <Bat className="hg-bat hg-bat-2" />
-      <Bat className="hg-bat hg-bat-3" />
-      <Pumpkin className="hg-pumpkin hg-pumpkin-1" />
-      <Pumpkin className="hg-pumpkin hg-pumpkin-2" />
       <svg
         className="hg-scene"
         viewBox="0 0 460 420"

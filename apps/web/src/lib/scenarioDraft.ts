@@ -11,6 +11,14 @@ export function newFact(
 ): FactDraft {
   return { id: crypto.randomUUID(), field, kind, value: "" };
 }
+export function factKind(value: unknown): FactDraft["kind"] {
+  const operands = Array.isArray(value) ? value : [value];
+  if (operands.length && operands.every((item) => typeof item === "number"))
+    return "number";
+  if (operands.length && operands.every((item) => typeof item === "boolean"))
+    return "boolean";
+  return "text";
+}
 export function readFacts(rows: FactDraft[]): Facts {
   const result = Object.create(null) as Facts;
   for (const row of rows) {

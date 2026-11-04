@@ -75,101 +75,105 @@ export function ProposalForm({ session }: { session: SimulationSession }) {
             save.mutate();
           }}
         >
-          <label>
-            Reason for the change
-            <textarea
-              required
-              maxLength={2000}
-              value={rationale}
-              onChange={(event) => setRationale(event.target.value)}
-              rows={3}
-            />
-          </label>
-          <p className="muted">
-            For a focused experiment, add a choice matching these exact facts.
-            Enter the action yourself; this does not create a general policy.
-          </p>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={
-              choices.length >= 50 ||
-              Object.keys(session.result.final_facts).length === 0 ||
-              Object.keys(session.result.final_facts).length > 20
-            }
-            onClick={() =>
-              setChoices((previous) => [
-                ...previous,
-                {
-                  id: `proposal-${crypto.randomUUID()}`,
-                  label: "",
-                  destination: nodes.find((node) => node.type === "end")!.id,
-                  conditions: Object.entries(session.result.final_facts).map(
-                    ([field, value]) => ({ field, operator: "eq", value }),
-                  ),
-                  source_refs: [],
-                  evidence_status: "uncited",
-                },
-              ])
-            }
-          >
-            Add choice for current facts
-          </Button>
-          <details className="existing-proposal-choices">
-            <summary>
-              Inspect or edit the existing {node.choices.length} choices
-            </summary>
-            <ChoiceEditor
-              choices={choices.filter((choice) =>
-                node.choices.some((original) => original.id === choice.id),
-              )}
-              onChange={(existing) =>
-                setChoices([
-                  ...existing,
-                  ...choices.filter(
-                    (choice) =>
-                      !node.choices.some(
-                        (original) => original.id === choice.id,
-                      ),
-                  ),
+          <fieldset className="authoring-fields" disabled={save.isPending}>
+            <label>
+              Reason for the change
+              <textarea
+                required
+                maxLength={2000}
+                value={rationale}
+                onChange={(event) => setRationale(event.target.value)}
+                rows={3}
+              />
+            </label>
+            <p className="muted">
+              For a focused experiment, add a choice matching these exact facts.
+              Enter the action yourself; this does not create a general policy.
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={
+                choices.length >= 50 ||
+                Object.keys(session.result.final_facts).length === 0 ||
+                Object.keys(session.result.final_facts).length > 20
+              }
+              onClick={() =>
+                setChoices((previous) => [
+                  ...previous,
+                  {
+                    id: `proposal-${crypto.randomUUID()}`,
+                    label: "",
+                    destination: nodes.find((node) => node.type === "end")!.id,
+                    conditions: Object.entries(session.result.final_facts).map(
+                      ([field, value]) => ({ field, operator: "eq", value }),
+                    ),
+                    source_refs: [],
+                    evidence_status: "uncited",
+                  },
                 ])
               }
-              nodes={nodes}
-            />
-          </details>
-          {choices.some(
-            (choice) =>
-              !node.choices.some((original) => original.id === choice.id),
-          ) && (
-            <>
-              <h3>Your proposed choices · uncited assumptions</h3>
+            >
+              Add choice for current facts
+            </Button>
+            <details className="existing-proposal-choices">
+              <summary>
+                Inspect or edit the existing {node.choices.length} choices
+              </summary>
               <ChoiceEditor
-                choices={choices.filter(
-                  (choice) =>
-                    !node.choices.some((original) => original.id === choice.id),
+                choices={choices.filter((choice) =>
+                  node.choices.some((original) => original.id === choice.id),
                 )}
-                onChange={(added) =>
+                onChange={(existing) =>
                   setChoices([
-                    ...choices.filter((choice) =>
-                      node.choices.some(
-                        (original) => original.id === choice.id,
-                      ),
+                    ...existing,
+                    ...choices.filter(
+                      (choice) =>
+                        !node.choices.some(
+                          (original) => original.id === choice.id,
+                        ),
                     ),
-                    ...added,
                   ])
                 }
                 nodes={nodes}
               />
-            </>
-          )}
-          <p className="muted">
-            Review the action, exact-fact conditions and destination before
-            saving. This experiment covers these inputs only; it does not
-            establish a general policy.
-          </p>
-          <Button disabled={save.isPending || !rationale.trim()}>
-            {save.isPending ? "Saving…" : "Save unapproved proposal"}
-          </Button>
+            </details>
+            {choices.some(
+              (choice) =>
+                !node.choices.some((original) => original.id === choice.id),
+            ) && (
+              <>
+                <h3>Your proposed choices · uncited assumptions</h3>
+                <ChoiceEditor
+                  choices={choices.filter(
+                    (choice) =>
+                      !node.choices.some(
+                        (original) => original.id === choice.id,
+                      ),
+                  )}
+                  onChange={(added) =>
+                    setChoices([
+                      ...choices.filter((choice) =>
+                        node.choices.some(
+                          (original) => original.id === choice.id,
+                        ),
+                      ),
+                      ...added,
+                    ])
+                  }
+                  nodes={nodes}
+                />
+              </>
+            )}
+            <p className="muted">
+              Review the action, exact-fact conditions and destination before
+              saving. This experiment covers these inputs only; it does not
+              establish a general policy.
+            </p>
+            <Button disabled={save.isPending || !rationale.trim()}>
+              {save.isPending ? "Saving…" : "Save unapproved proposal"}
+            </Button>
+          </fieldset>
         </form>
       )}
       {(save.error ?? rehearse.error) && (
