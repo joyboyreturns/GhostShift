@@ -109,7 +109,7 @@ test("a checkpoint fork records an alternate choice without modifying its parent
   const parentUrl = page.url();
   await page
     .getByRole("button", {
-      name: "Fork before Is the vendor late?",
+      name: "Fork here, before Is the vendor late?",
       exact: true,
     })
     .click();

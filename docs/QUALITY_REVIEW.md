@@ -68,3 +68,12 @@ remain unapproved. No new feature scope, OCR, authentication, collaboration or r
 The existing local narrated recording demonstrates the same workflow with the earlier visual theme;
 it was retained, not rerecorded or uploaded. Public hosting and target-server/TLS acceptance remain
 deferred and unclaimed.
+
+## Automated accessibility scan (added 2026-11-05)
+
+`apps/web/tests/e2e/accessibility.spec.ts` runs axe-core (WCAG 2.0/2.1 A and AA rules) against the home,
+guide, Source Studio, library, import, simulation start, live Simulation Room (active and uncovered states),
+Replay Lab, session report, new-scenario pages, and three pages at 390 px. It found one real violation
+(WCAG 2.5.3 label in name): the timeline's "Fork here ↗" button had an `aria-label` that did not contain its
+visible text. It is now "Fork here, before <step>". Automated scans catch only a subset of issues; keyboard,
+screen-reader and contrast review beyond axe's checks remain manual.

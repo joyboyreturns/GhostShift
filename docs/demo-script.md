@@ -42,3 +42,22 @@ clean fixture template and temporary workspace, launches loopback API/Caddy, dri
 actions, asserts actual outcomes and parent preservation, and removes temporary servers/data.
 Narration sentence timings are distributed within measured chapter audio; they are not word-aligned.
 The `.srt` file can accompany a YouTube upload. Media artifacts are ignored by Git and Docker.
+
+
+## Rubric-aligned final cut (plan; record after the Kiro sessions and public deployment)
+
+Kiroween scores Presentation on whether the demo is easy to understand, shows the product working, and
+makes problem and audience clear. The current 170-second recording above predates the real Kiro work and
+the public URL. For the submitted cut (target 2:50, public YouTube, no unlicensed music):
+
+| Time | Show (real footage only) | Purpose |
+| --- | --- | --- |
+| 0:00–0:15 | The vendor-late / rain / indoor-full situation, then the run stopping at "no matching path". | Problem and audience (event and operations coordinators) |
+| 0:15–0:35 | Home → Start your shift; one sentence on what GhostShift is. | Product introduction |
+| 0:35–1:40 | Real choices → ghost path → inspect source → test a proposed rule → compare with parent → verify replay → export. | Core workflow |
+| 1:40–2:15 | Technical differentiation: Ghost Scan listing every ghost path automatically **if the Kiro session delivers it**; otherwise the replay hash and fork evidence. | Innovation |
+| 2:15–2:40 | Kiro artifacts that actually exist at recording time: specs, a hook firing, the MCP rehearsal in Kiro. Say plainly what Kiro, Codex and Claude Code each did. | Kiro implementation, honesty |
+| 2:40–2:55 | Exported report and the public URL on screen. | Close |
+
+Do not show or narrate any Kiro capability that has not been run and logged in `docs/kiro-evidence.md`.
+If a segment's feature is not delivered, cut the segment instead of staging it.

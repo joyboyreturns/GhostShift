@@ -55,7 +55,7 @@ export function Timeline({
                     className="text-action"
                     disabled={pending}
                     onClick={() => onFork(event.sequence)}
-                    aria-label={`Fork before ${node?.label ?? event.node_id}`}
+                    aria-label={`Fork here, before ${node?.label ?? event.node_id}`}
                   >
                     Fork here ↗
                   </button>
